@@ -23,7 +23,10 @@ const checks = [
 
 for (let { mass, expected } of checks) {
   const fuel = getTotalFuel(mass);
-  console.assert(fuel === expected, `check failed. Input: ${mass}; Output: ${fuel}; Expected: ${expected}`);
+  console.assert(
+    fuel === expected,
+    `check failed. Input: ${mass}; Output: ${fuel}; Expected: ${expected}`,
+  );
 }
 
 const input = `
@@ -127,7 +130,10 @@ const input = `
   138764
   106361
   82104
-`.trim().split('\n').map(_ => Number(_));
+`
+  .trim()
+  .split('\n')
+  .map(_ => Number(_));
 
 const answer = input.reduce((acc, mass) => acc + getTotalFuel(mass), 0);
 console.log('answer: ', answer);
