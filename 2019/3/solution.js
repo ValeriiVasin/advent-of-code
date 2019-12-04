@@ -33,6 +33,17 @@ const toPath = wire => {
   return path;
 };
 
+function toLines(wire) {
+  const paths = toPath(wire);
+  const lines = [];
+
+  for (let i = 0; i < paths.length - 1; i++) {
+    lines.push([paths[i], paths[i + 1]]);
+  }
+
+  return lines;
+}
+
 const distanceTo = ({ x, y }) => Math.abs(x) + Math.abs(y);
 
 const isVerticalLine = ([start, end]) => start.x === end.x;
@@ -79,13 +90,39 @@ const findCrossingPoint = (lineOne, lineTwo) => {
     : null;
 };
 
+function solution(wireOne, wireTwo) {
+  const crossingPoints = [];
+  const linesOne = toLines(wireOne);
+  const linesTwo = toLines(wireTwo);
+
+  for (const lineOne of linesOne) {
+    for (const lineTwo of linesTwo) {
+      const point = findCrossingPoint(lineOne, lineTwo);
+
+      if (point) {
+        crossingPoints.push(point);
+      }
+    }
+  }
+
+  return Math.min(
+    ...crossingPoints
+      .map(point => distanceTo(point))
+      .filter(distance => distance > 0),
+  );
+}
+
+console.log('answer #3.1', solution(wireOne, wireTwo));
+
 module.exports = {
   toDiff,
   toPath,
+  toLines,
   distanceTo,
   isHorizontalLine,
   isVerticalLine,
   isParallel,
   isPointOnLine,
   findCrossingPoint,
+  solution,
 };

@@ -1,12 +1,14 @@
 const {
   toDiff,
   toPath,
+  toLines,
   distanceTo,
   isVerticalLine,
   isHorizontalLine,
   isParallel,
   findCrossingPoint,
   isPointOnLine,
+  solution,
 } = require('./solution');
 
 describe('diff', () => {
@@ -33,6 +35,21 @@ describe('to path', () => {
       { x: 0, y: 0 },
       { x: 0, y: 10 },
       { x: 20, y: 10 },
+    ]);
+  });
+});
+
+describe('to lines', () => {
+  it('converts wire to lines', () => {
+    expect(toLines('U10,R20')).toEqual([
+      [
+        { x: 0, y: 0 },
+        { x: 0, y: 10 },
+      ],
+      [
+        { x: 0, y: 10 },
+        { x: 20, y: 10 },
+      ],
     ]);
   });
 });
@@ -147,5 +164,25 @@ describe('find crossing point', () => {
       { x: 1, y: 1 },
     ];
     expect(findCrossingPoint(one, two)).toBeNull();
+  });
+});
+
+describe('solution', () => {
+  it('test #1', () => {
+    expect(
+      solution(
+        'R75,D30,R83,U83,L12,D49,R71,U7,L72',
+        'U62,R66,U55,R34,D71,R55,D58,R83',
+      ),
+    ).toBe(159);
+  });
+
+  it('test #2', () => {
+    expect(
+      solution(
+        'R98,U47,R26,D63,R33,U87,L62,D20,R33,U53,R51',
+        'U98,R91,D20,R16,D67,R40,U7,R15,U6,R7',
+      ),
+    ).toBe(135);
   });
 });
