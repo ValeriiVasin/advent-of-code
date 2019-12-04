@@ -112,7 +112,70 @@ function solution(wireOne, wireTwo) {
   );
 }
 
+function lineLength([start, end]) {
+  return isVerticalLine([start, end])
+    ? Math.abs(start.y - end.y)
+    : Math.abs(start.x - end.x);
+}
+
+const pointToString = point => `${point.x};${point.y}`;
+
+function secondSolution(wireOne, wireTwo) {
+  const linesOne = toLines(wireOne);
+  const linesTwo = toLines(wireTwo);
+  const points = [];
+
+  let wireOneDistance = 0;
+  const wireOneDistances = new Map();
+  const wireTwoDistances = new Map();
+  for (const lineOne of linesOne) {
+    let wireTwoDistance = 0;
+    for (const lineTwo of linesTwo) {
+      const point = findCrossingPoint(lineOne, lineTwo);
+
+      if (!point) {
+        wireTwoDistance += lineLength(lineTwo);
+        continue;
+      }
+
+      points.push(point);
+      const key = pointToString(point);
+
+      if (!wireOneDistances.has(key)) {
+        const [start] = lineOne;
+        wireOneDistances.set(key, wireOneDistance + lineLength([start, point]));
+      }
+
+      if (!wireTwoDistances.has(key)) {
+        const [start] = lineTwo;
+        wireTwoDistances.set(key, wireTwoDistance + lineLength([start, point]));
+      }
+
+      wireTwoDistance += lineLength(lineTwo);
+    }
+
+    wireOneDistance += lineLength(lineOne);
+  }
+
+  let distance = Infinity;
+  for (let point of points) {
+    if (point.x === 0 && point.y === 0) {
+      continue;
+    }
+
+    const key = pointToString(point);
+    distance = Math.min(
+      distance,
+      wireOneDistances.get(key) + wireTwoDistances.get(key),
+    );
+  }
+
+  return distance;
+}
+
 console.log('answer #3.1', solution(wireOne, wireTwo));
+console.log('answer #3.2', secondSolution(wireOne, wireTwo));
+
 
 module.exports = {
   toDiff,
@@ -125,4 +188,5 @@ module.exports = {
   isPointOnLine,
   findCrossingPoint,
   solution,
+  secondSolution,
 };
