@@ -176,7 +176,6 @@ function secondSolution(wireOne, wireTwo) {
 console.log('answer #3.1', solution(wireOne, wireTwo));
 console.log('answer #3.2', secondSolution(wireOne, wireTwo));
 
-
 module.exports = {
   toDiff,
   toPath,
