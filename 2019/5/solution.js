@@ -25,9 +25,14 @@ function add({ program, params: [a, b, to], modes: [modeA, modeB], pointer }) {
   return { pointer: pointer + 4 };
 }
 
-function multiply({ program, params: [a, b, to], modes: [modeA, modeB], pointer }) {
+function multiply({
+  program,
+  params: [a, b, to],
+  modes: [modeA, modeB],
+  pointer,
+}) {
   program[to] = getValue(program, a, modeA) * getValue(program, b, modeB);
-  return { pointer: pointer + 4 }
+  return { pointer: pointer + 4 };
 }
 
 function save({ program, params: [to], input, pointer }) {
@@ -40,28 +45,48 @@ function output({ program, params: [value], output, modes: [mode], pointer }) {
   return { pointer: pointer + 2 };
 }
 
-function jumpIfTrue({ program, params: [a, b], modes: [modeA, modeB], pointer }) {
+function jumpIfTrue({
+  program,
+  params: [a, b],
+  modes: [modeA, modeB],
+  pointer,
+}) {
   const aValue = getValue(program, a, modeA);
   const bValue = getValue(program, b, modeB);
 
   return aValue === 0 ? { pointer: pointer + 3 } : { pointer: bValue };
 }
 
-function jumpIfFalse({ program, params: [a, b], modes: [modeA, modeB], pointer }) {
+function jumpIfFalse({
+  program,
+  params: [a, b],
+  modes: [modeA, modeB],
+  pointer,
+}) {
   const aValue = getValue(program, a, modeA);
   const bValue = getValue(program, b, modeB);
 
   return aValue === 0 ? { pointer: bValue } : { pointer: pointer + 3 };
 }
 
-function lessThan({ program, params: [a, b, to], modes: [modeA, modeB], pointer }) {
+function lessThan({
+  program,
+  params: [a, b, to],
+  modes: [modeA, modeB],
+  pointer,
+}) {
   const valueA = getValue(program, a, modeA);
   const valueB = getValue(program, b, modeB);
   program[to] = valueA < valueB ? 1 : 0;
   return { pointer: pointer + 4 };
 }
 
-function equals({ program, params: [a, b, to], modes: [modeA, modeB], pointer }) {
+function equals({
+  program,
+  params: [a, b, to],
+  modes: [modeA, modeB],
+  pointer,
+}) {
   const valueA = getValue(program, a, modeA);
   const valueB = getValue(program, b, modeB);
   program[to] = valueA === valueB ? 1 : 0;
