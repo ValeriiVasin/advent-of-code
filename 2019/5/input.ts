@@ -1,4 +1,4 @@
-module.exports = [
+export const program = [
   3,
   225,
   1,

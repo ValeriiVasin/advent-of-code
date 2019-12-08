@@ -1,4 +1,4 @@
-const { parseInstruction, run } = require('./solution');
+import { parseInstruction, run } from './lib';
 
 describe('parsing instruction', () => {
   it('parses instructions', () => {
@@ -109,7 +109,7 @@ fdescribe('#5.2', () => {
   });
 
   describe('larger example', () => {
-    let program;
+    let program: number[];
 
     beforeEach(() => {
       program = [
