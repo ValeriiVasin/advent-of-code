@@ -1,4 +1,9 @@
-const { createMap, orbitsCount, totalOrbitsCount } = require('./lib');
+const {
+  createMap,
+  orbitsCount,
+  totalOrbitsCount,
+  transfersCount,
+} = require('./lib');
 
 describe('orbits count', () => {
   const lines = [
@@ -28,5 +33,28 @@ describe('orbits count', () => {
 
   it('total orbits', () => {
     expect(totalOrbitsCount(map)).toBe(42);
+  });
+});
+
+describe('paths', () => {
+  const lines = [
+    'COM)B',
+    'B)C',
+    'C)D',
+    'D)E',
+    'E)F',
+    'B)G',
+    'G)H',
+    'D)I',
+    'E)J',
+    'J)K',
+    'K)L',
+    'K)YOU',
+    'I)SAN',
+  ];
+  const map = createMap(lines);
+
+  it('count orbital transfers', () => {
+    expect(transfersCount(map, 'YOU', 'SAN')).toBe(4);
   });
 });

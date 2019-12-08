@@ -9,15 +9,18 @@ function createMap(lines) {
   return map;
 }
 
-function orbitsCount(map, object) {
-  let count = -1;
+function pathToCenter(map, from) {
+  const path = [];
 
-  while (object) {
-    count++;
-    object = map.get(object);
+  while ((from = map.get(from))) {
+    path.push(from);
   }
 
-  return count;
+  return path;
+}
+
+function orbitsCount(map, object) {
+  return pathToCenter(map, object).length;
 }
 
 function totalOrbitsCount(map) {
@@ -30,8 +33,21 @@ function totalOrbitsCount(map) {
   return count;
 }
 
+function transfersCount(map, from, to) {
+  const fromPath = pathToCenter(map, from);
+  const toPath = pathToCenter(map, to);
+
+  while (fromPath[fromPath.length - 1] === toPath[toPath.length - 1]) {
+    fromPath.pop();
+    toPath.pop();
+  }
+
+  return fromPath.length + toPath.length;
+}
+
 module.exports = {
   orbitsCount,
   createMap,
   totalOrbitsCount,
+  transfersCount,
 };
