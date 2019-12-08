@@ -47,10 +47,17 @@ export const findMaxSignal = async (
   return { signal: maxSignal, phases: maxPhases };
 };
 
-export const amplify = async (program: number[], phases: number[]) => {
+export const amplify = async (
+  program: number[],
+  phases: number[],
+  mode = Mode.Normal,
+) => {
   let value = 0;
   for (let phase of phases) {
-    const { output } = await run([...program], [phase, value]);
+    const { output } = await run({
+      program: [...program],
+      input: [phase, value],
+    });
     value = output[0];
   }
 

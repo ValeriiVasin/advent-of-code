@@ -182,11 +182,15 @@ export function parseInstruction(
   };
 }
 
-export async function run(
-  program: number[],
-  input: number[] = [],
-  output: number[] = [],
-) {
+export async function run({
+  program,
+  input = [],
+  output = [],
+}: {
+  program: number[];
+  input?: number[];
+  output?: number[];
+}) {
   let i = 0;
   while (i < program.length) {
     const { code, modes } = parseInstruction(program[i]);

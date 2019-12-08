@@ -51,7 +51,7 @@ describe('findMaxSignal', () => {
   });
 });
 
-describe.skip('feedback loop', () => {
+describe.only('feedback loop', () => {
   it('produces proper result in feedback loop mode', () => {
     expect(amplify(programFour, [9, 8, 7, 6, 5])).resolves.toBe(139629729);
   });

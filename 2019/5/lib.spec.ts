@@ -18,75 +18,92 @@ describe('parsing instruction', () => {
 
 it('example #1', async () => {
   const program = [1002, 4, 3, 4, 33];
-  expect(run(program)).resolves.toEqual(
+  expect(run({ program })).resolves.toEqual(
     expect.objectContaining({ program: [1002, 4, 3, 4, 99] }),
   );
 });
 
 it('example #2', async () => {
-  expect.assertions(1);
   const program = [1101, 100, -1, 4, 0];
-  await run(program);
-  expect(program).toEqual([1101, 100, -1, 4, 99]);
+  expect(run({ program })).resolves.toEqual(
+    expect.objectContaining({ program: [1101, 100, -1, 4, 99] }),
+  );
 });
 
 it('example. output the input', async () => {
-  expect.assertions(1);
   const program = [3, 0, 4, 0, 99];
-  const { output } = await run(program, [7]);
-  expect(output).toEqual([7]);
+  expect(run({ program, input: [7] })).resolves.toEqual(
+    expect.objectContaining({ output: [7] }),
+  );
 });
 
 it('input', async () => {
-  expect.assertions(1);
-  const program = [3, 2, 0];
-  await run(program, [99]);
-  expect(program).toEqual([3, 2, 99]);
+  expect(run({ program: [3, 2, 0], input: [99] })).resolves.toEqual(
+    expect.objectContaining({ program: [3, 2, 99] }),
+  );
 });
 
 it('output', async () => {
-  expect.assertions(1);
-  const program = [4, 0, 99];
-  const { output } = await run(program);
-  expect(output).toEqual([4]);
+  expect(run({ program: [4, 0, 99] })).resolves.toEqual(
+    expect.objectContaining({ output: [4] }),
+  );
 });
 
 describe('#5.2', () => {
   it('outputs 1 if input equals 8; otherwise - 0', async () => {
-    expect.assertions(3);
     const program = () => [3, 9, 8, 9, 10, 9, 4, 9, 99, -1, 8];
-    expect((await run(program(), [8])).output).toEqual([1]);
-    expect((await run(program(), [7])).output).toEqual([0]);
-    expect((await run(program(), [5])).output).toEqual([0]);
+    expect(run({ program: program(), input: [8] })).resolves.toEqual(
+      expect.objectContaining({ output: [1] }),
+    );
+    expect(run({ program: program(), input: [7] })).resolves.toEqual(
+      expect.objectContaining({ output: [0] }),
+    );
+    expect(run({ program: program(), input: [5] })).resolves.toEqual(
+      expect.objectContaining({ output: [0] }),
+    );
   });
 
   it('outputs 1 if input less than 8; otherwise - 0', async () => {
-    expect.assertions(3);
     const program = () => [3, 9, 7, 9, 10, 9, 4, 9, 99, -1, 8];
-    expect((await run(program(), [5])).output).toEqual([1]);
-    expect((await run(program(), [8])).output).toEqual([0]);
-    expect((await run(program(), [10])).output).toEqual([0]);
+    expect(run({ program: program(), input: [5] })).resolves.toEqual(
+      expect.objectContaining({ output: [1] }),
+    );
+    expect(run({ program: program(), input: [8] })).resolves.toEqual(
+      expect.objectContaining({ output: [0] }),
+    );
+    expect(run({ program: program(), input: [10] })).resolves.toEqual(
+      expect.objectContaining({ output: [0] }),
+    );
   });
 
   it('[immediate mode] outputs 1 if input equals 8; otherwise - 0', async () => {
-    expect.assertions(3);
     const program = () => [3, 3, 1108, -1, 8, 3, 4, 3, 99];
-    expect((await run(program(), [8])).output).toEqual([1]);
-    expect((await run(program(), [7])).output).toEqual([0]);
-    expect((await run(program(), [5])).output).toEqual([0]);
+    expect(run({ program: program(), input: [8] })).resolves.toEqual(
+      expect.objectContaining({ output: [1] }),
+    );
+    expect(run({ program: program(), input: [7] })).resolves.toEqual(
+      expect.objectContaining({ output: [0] }),
+    );
+    expect(run({ program: program(), input: [5] })).resolves.toEqual(
+      expect.objectContaining({ output: [0] }),
+    );
   });
 
   it('[immediate mode] outputs 1 if input less than 8; otherwise - 0', async () => {
-    expect.assertions(3);
     const program = () => [3, 3, 1107, -1, 8, 3, 4, 3, 99];
-    expect((await run(program(), [5])).output).toEqual([1]);
-    expect((await run(program(), [8])).output).toEqual([0]);
-    expect((await run(program(), [10])).output).toEqual([0]);
+    expect(run({ program: program(), input: [5] })).resolves.toEqual(
+      expect.objectContaining({ output: [1] }),
+    );
+    expect(run({ program: program(), input: [8] })).resolves.toEqual(
+      expect.objectContaining({ output: [0] }),
+    );
+    expect(run({ program: program(), input: [10] })).resolves.toEqual(
+      expect.objectContaining({ output: [0] }),
+    );
   });
 
   describe('jump tests', () => {
     it('[position mode] output 0 if the input was zero or 1 if the input was non-zero', async () => {
-      expect.assertions(3);
       const program = () => [
         3,
         12,
@@ -105,17 +122,28 @@ describe('#5.2', () => {
         1,
         9,
       ];
-      expect((await run(program(), [0])).output).toEqual([0]);
-      expect((await run(program(), [-5])).output).toEqual([1]);
-      expect((await run(program(), [5])).output).toEqual([1]);
+      expect(run({ program: program(), input: [0] })).resolves.toEqual(
+        expect.objectContaining({ output: [0] }),
+      );
+      expect(run({ program: program(), input: [-5] })).resolves.toEqual(
+        expect.objectContaining({ output: [1] }),
+      );
+      expect(run({ program: program(), input: [5] })).resolves.toEqual(
+        expect.objectContaining({ output: [1] }),
+      );
     });
 
     it('[immediate mode] output 0 if the input was zero or 1 if the input was non-zero', async () => {
-      expect.assertions(3);
       const program = () => [3, 3, 1105, -1, 9, 1101, 0, 0, 12, 4, 12, 99, 1];
-      expect((await run(program(), [0])).output).toEqual([0]);
-      expect((await run(program(), [-5])).output).toEqual([1]);
-      expect((await run(program(), [5])).output).toEqual([1]);
+      expect(run({ program: program(), input: [0] })).resolves.toEqual(
+        expect.objectContaining({ output: [0] }),
+      );
+      expect(run({ program: program(), input: [-5] })).resolves.toEqual(
+        expect.objectContaining({ output: [1] }),
+      );
+      expect(run({ program: program(), input: [5] })).resolves.toEqual(
+        expect.objectContaining({ output: [1] }),
+      );
     });
   });
 
@@ -175,22 +203,25 @@ describe('#5.2', () => {
     });
 
     it('output 999 if the input value is below 8', async () => {
-      expect.assertions(2);
-      expect((await run(program, [7])).output).toEqual([999]);
-      expect((await run(program, [-5])).output).toEqual([999]);
+      expect(run({ program, input: [7] })).resolves.toEqual(
+        expect.objectContaining({ output: [999] }),
+      );
+      expect(run({ program, input: [-5] })).resolves.toEqual(
+        expect.objectContaining({ output: [999] }),
+      );
     });
 
     it('output 1000 if the input value is equal to 8', async () => {
-      expect(run(program, [8])).resolves.toEqual(
+      expect(run({ program, input: [8] })).resolves.toEqual(
         expect.objectContaining({ output: [1000] }),
       );
     });
 
     it('output 1001 if the input value is greater than 8', async () => {
-      expect(run(program, [9])).resolves.toEqual(
+      expect(run({ program, input: [9] })).resolves.toEqual(
         expect.objectContaining({ output: [1001] }),
       );
-      expect(run(program, [100])).resolves.toEqual(
+      expect(run({ program, input: [100] })).resolves.toEqual(
         expect.objectContaining({ output: [1001] }),
       );
     });
@@ -200,7 +231,7 @@ describe('#5.2', () => {
 it('waits for the input data available', async () => {
   const program = [3, 2, 0];
   const input: number[] = [];
-  const runPromise = run(program, input);
+  const runPromise = run({ program, input });
   await timeout(50);
   input.push(99);
   expect(runPromise).resolves.toEqual(
