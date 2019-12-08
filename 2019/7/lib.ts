@@ -22,13 +22,22 @@ export function permutations(
   return results;
 }
 
-export const findMaxSignal = (
+export enum Mode {
+  Normal,
+  FeedbackLoop,
+}
+
+export const findMaxSignal = async (
   program: number[],
-): { signal: number; phases: number[] } => {
+  mode = Mode.Normal,
+): Promise<{ signal: number; phases: number[] }> => {
+  const availablePhases =
+    mode === Mode.Normal ? [0, 1, 2, 3, 4] : [5, 6, 7, 8, 9];
   let maxSignal = -Infinity;
   let maxPhases: number[];
-  for (let phases of permutations([0, 1, 2, 3, 4])) {
-    const signal = amplify(program, phases);
+
+  for (let phases of permutations(availablePhases)) {
+    const signal = await amplify(program, phases);
     if (signal > maxSignal) {
       maxSignal = signal;
       maxPhases = phases;
@@ -38,10 +47,10 @@ export const findMaxSignal = (
   return { signal: maxSignal, phases: maxPhases };
 };
 
-export const amplify = (program: number[], phases: number[]): number => {
+export const amplify = async (program: number[], phases: number[]) => {
   let value = 0;
   for (let phase of phases) {
-    const { output } = run([...program], [phase, value]);
+    const { output } = await run([...program], [phase, value]);
     value = output[0];
   }
 

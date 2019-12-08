@@ -16,67 +16,77 @@ describe('parsing instruction', () => {
   });
 });
 
-it('example #1', () => {
+it('example #1', async () => {
+  expect.assertions(1);
   const program = [1002, 4, 3, 4, 33];
-  run(program);
+  await run(program);
   expect(program).toEqual([1002, 4, 3, 4, 99]);
 });
 
-it('example #2', () => {
+it('example #2', async () => {
+  expect.assertions(1);
   const program = [1101, 100, -1, 4, 0];
-  run(program);
+  await run(program);
   expect(program).toEqual([1101, 100, -1, 4, 99]);
 });
 
-it('example. output the input', () => {
+it('example. output the input', async () => {
+  expect.assertions(1);
   const program = [3, 0, 4, 0, 99];
-  const { output } = run(program, [7]);
+  const { output } = await run(program, [7]);
   expect(output).toEqual([7]);
 });
 
-it('input', () => {
+it('input', async () => {
+  expect.assertions(1);
   const program = [3, 2, 0];
-  run(program, [99]);
+  await run(program, [99]);
   expect(program).toEqual([3, 2, 99]);
 });
 
-it('output', () => {
+it('output', async () => {
+  expect.assertions(1);
   const program = [4, 0, 99];
-  const { output } = run(program);
+  const { output } = await run(program);
   expect(output).toEqual([4]);
 });
 
-fdescribe('#5.2', () => {
-  it('outputs 1 if input equals 8; otherwise - 0', () => {
+describe('#5.2', () => {
+  it('outputs 1 if input equals 8; otherwise - 0', async () => {
+    expect.assertions(3);
     const program = () => [3, 9, 8, 9, 10, 9, 4, 9, 99, -1, 8];
-    expect(run(program(), [8]).output).toEqual([1]);
-    expect(run(program(), [7]).output).toEqual([0]);
-    expect(run(program(), [5]).output).toEqual([0]);
+    expect((await run(program(), [8])).output).toEqual([1]);
+    expect((await run(program(), [7])).output).toEqual([0]);
+    expect((await run(program(), [5])).output).toEqual([0]);
   });
 
-  it('outputs 1 if input less than 8; otherwise - 0', () => {
+  it('outputs 1 if input less than 8; otherwise - 0', async () => {
+    expect.assertions(3);
     const program = () => [3, 9, 7, 9, 10, 9, 4, 9, 99, -1, 8];
-    expect(run(program(), [5]).output).toEqual([1]);
-    expect(run(program(), [8]).output).toEqual([0]);
-    expect(run(program(), [10]).output).toEqual([0]);
+    expect((await run(program(), [5])).output).toEqual([1]);
+    expect((await run(program(), [8])).output).toEqual([0]);
+    expect((await run(program(), [10])).output).toEqual([0]);
   });
 
-  it('[immediate mode] outputs 1 if input equals 8; otherwise - 0', () => {
+  it('[immediate mode] outputs 1 if input equals 8; otherwise - 0', async () => {
+    expect.assertions(3);
     const program = () => [3, 3, 1108, -1, 8, 3, 4, 3, 99];
-    expect(run(program(), [8]).output).toEqual([1]);
-    expect(run(program(), [7]).output).toEqual([0]);
-    expect(run(program(), [5]).output).toEqual([0]);
+    expect((await run(program(), [8])).output).toEqual([1]);
+    expect((await run(program(), [7])).output).toEqual([0]);
+    expect((await run(program(), [5])).output).toEqual([0]);
   });
 
-  it('[immediate mode] outputs 1 if input less than 8; otherwise - 0', () => {
+  it('[immediate mode] outputs 1 if input less than 8; otherwise - 0', async () => {
+    expect.assertions(3);
     const program = () => [3, 3, 1107, -1, 8, 3, 4, 3, 99];
-    expect(run(program(), [5]).output).toEqual([1]);
-    expect(run(program(), [8]).output).toEqual([0]);
-    expect(run(program(), [10]).output).toEqual([0]);
+    expect((await run(program(), [5])).output).toEqual([1]);
+    expect((await run(program(), [8])).output).toEqual([0]);
+    expect((await run(program(), [10])).output).toEqual([0]);
   });
 
   describe('jump tests', () => {
-    it('[position mode] output 0 if the input was zero or 1 if the input was non-zero', () => {
+    it('[position mode] output 0 if the input was zero or 1 if the input was non-zero', async () => {
+      expect.assertions(3);
       const program = () => [
         3,
         12,
@@ -95,16 +105,17 @@ fdescribe('#5.2', () => {
         1,
         9,
       ];
-      expect(run(program(), [0]).output).toEqual([0]);
-      expect(run(program(), [-5]).output).toEqual([1]);
-      expect(run(program(), [5]).output).toEqual([1]);
+      expect((await run(program(), [0])).output).toEqual([0]);
+      expect((await run(program(), [-5])).output).toEqual([1]);
+      expect((await run(program(), [5])).output).toEqual([1]);
     });
 
-    it('[immediate mode] output 0 if the input was zero or 1 if the input was non-zero', () => {
+    it('[immediate mode] output 0 if the input was zero or 1 if the input was non-zero', async () => {
+      expect.assertions(3);
       const program = () => [3, 3, 1105, -1, 9, 1101, 0, 0, 12, 4, 12, 99, 1];
-      expect(run(program(), [0]).output).toEqual([0]);
-      expect(run(program(), [-5]).output).toEqual([1]);
-      expect(run(program(), [5]).output).toEqual([1]);
+      expect((await run(program(), [0])).output).toEqual([0]);
+      expect((await run(program(), [-5])).output).toEqual([1]);
+      expect((await run(program(), [5])).output).toEqual([1]);
     });
   });
 
@@ -163,18 +174,21 @@ fdescribe('#5.2', () => {
       ];
     });
 
-    it('output 999 if the input value is below 8', () => {
-      expect(run(program, [7]).output).toEqual([999]);
-      expect(run(program, [-5]).output).toEqual([999]);
+    it('output 999 if the input value is below 8', async () => {
+      expect.assertions(2);
+      expect((await run(program, [7])).output).toEqual([999]);
+      expect((await run(program, [-5])).output).toEqual([999]);
     });
 
-    it('output 1000 if the input value is equal to 8', () => {
-      expect(run(program, [8]).output).toEqual([1000]);
+    it('output 1000 if the input value is equal to 8', async () => {
+      expect.assertions(1);
+      expect((await run(program, [8])).output).toEqual([1000]);
     });
 
-    it('output 1001 if the input value is greater than 8', () => {
-      expect(run(program, [9]).output).toEqual([1001]);
-      expect(run(program, [100]).output).toEqual([1001]);
+    it('output 1001 if the input value is greater than 8', async () => {
+      expect.assertions(2);
+      expect((await run(program, [9])).output).toEqual([1001]);
+      expect((await run(program, [100])).output).toEqual([1001]);
     });
   });
 });

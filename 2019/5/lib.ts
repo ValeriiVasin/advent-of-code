@@ -40,9 +40,9 @@ interface Action<P = any, M = any> {
     params: P;
     modes?: M;
     pointer: number;
-  }): {
+  }): Promise<{
     pointer: number;
-  };
+  }>;
 }
 
 const params = new Map([
@@ -57,7 +57,7 @@ const params = new Map([
   [OP_EQUALS, 3],
 ]);
 
-const add: Action<Three, ModeTwo> = ({
+const add: Action<Three, ModeTwo> = async ({
   program,
   params: [a, b, to],
   modes: [modeA, modeB],
@@ -67,7 +67,7 @@ const add: Action<Three, ModeTwo> = ({
   return { pointer: pointer + 4 };
 };
 
-const multiply: Action<Three, ModeTwo> = ({
+const multiply: Action<Three, ModeTwo> = async ({
   program,
   params: [a, b, to],
   modes: [modeA, modeB],
@@ -77,12 +77,12 @@ const multiply: Action<Three, ModeTwo> = ({
   return { pointer: pointer + 4 };
 };
 
-const save: Action<One> = ({ program, params: [to], input, pointer }) => {
+const save: Action<One> = async ({ program, params: [to], input, pointer }) => {
   program[to] = input.shift();
   return { pointer: pointer + 2 };
 };
 
-const output: Action<One, ModeOne> = ({
+const output: Action<One, ModeOne> = async ({
   program,
   params: [value],
   output,
@@ -93,7 +93,7 @@ const output: Action<One, ModeOne> = ({
   return { pointer: pointer + 2 };
 };
 
-const jumpIfTrue: Action<Two, ModeTwo> = ({
+const jumpIfTrue: Action<Two, ModeTwo> = async ({
   program,
   params: [a, b],
   modes: [modeA, modeB],
@@ -105,7 +105,7 @@ const jumpIfTrue: Action<Two, ModeTwo> = ({
   return aValue === 0 ? { pointer: pointer + 3 } : { pointer: bValue };
 };
 
-const jumpIfFalse: Action<Two, ModeTwo> = ({
+const jumpIfFalse: Action<Two, ModeTwo> = async ({
   program,
   params: [a, b],
   modes: [modeA, modeB],
@@ -117,7 +117,7 @@ const jumpIfFalse: Action<Two, ModeTwo> = ({
   return aValue === 0 ? { pointer: bValue } : { pointer: pointer + 3 };
 };
 
-const lessThan: Action<Three, ModeTwo> = ({
+const lessThan: Action<Three, ModeTwo> = async ({
   program,
   params: [a, b, to],
   modes: [modeA, modeB],
@@ -129,7 +129,7 @@ const lessThan: Action<Three, ModeTwo> = ({
   return { pointer: pointer + 4 };
 };
 
-const equals: Action<Three, ModeTwo> = ({
+const equals: Action<Three, ModeTwo> = async ({
   program,
   params: [a, b, to],
   modes: [modeA, modeB],
@@ -173,8 +173,13 @@ export function parseInstruction(
   };
 }
 
-export function run(program: number[], input: number[] = []) {
-  const output: number[] = [];
+export async function run(
+  program: number[],
+  input: number[] = [],
+  io = false,
+  ask: (input: number[]) => void = () => {},
+) {
+  const output: number[] = io ? input : [];
 
   let i = 0;
   while (i < program.length) {
@@ -185,7 +190,7 @@ export function run(program: number[], input: number[] = []) {
     }
 
     const action = actions.get(code);
-    const { pointer } = action({
+    const { pointer } = await action({
       program,
       input,
       output,
