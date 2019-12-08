@@ -28,7 +28,7 @@ describe('permute', () => {
   });
 });
 
-describe.only('findMaxSignal', () => {
+describe('findMaxSignal', () => {
   it('#1', async () => {
     await expect(findMaxSignal(programOne)).resolves.toEqual({
       signal: 43210,
