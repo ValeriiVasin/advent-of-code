@@ -1,4 +1,4 @@
-import { parseInstruction, run } from './lib';
+import { parseInstruction, run, timeout } from './lib';
 
 describe('parsing instruction', () => {
   it('parses instructions', () => {
@@ -17,10 +17,10 @@ describe('parsing instruction', () => {
 });
 
 it('example #1', async () => {
-  expect.assertions(1);
   const program = [1002, 4, 3, 4, 33];
-  await run(program);
-  expect(program).toEqual([1002, 4, 3, 4, 99]);
+  expect(run(program)).resolves.toEqual(
+    expect.objectContaining({ program: [1002, 4, 3, 4, 99] }),
+  );
 });
 
 it('example #2', async () => {
@@ -181,14 +181,29 @@ describe('#5.2', () => {
     });
 
     it('output 1000 if the input value is equal to 8', async () => {
-      expect.assertions(1);
-      expect((await run(program, [8])).output).toEqual([1000]);
+      expect(run(program, [8])).resolves.toEqual(
+        expect.objectContaining({ output: [1000] }),
+      );
     });
 
     it('output 1001 if the input value is greater than 8', async () => {
-      expect.assertions(2);
-      expect((await run(program, [9])).output).toEqual([1001]);
-      expect((await run(program, [100])).output).toEqual([1001]);
+      expect(run(program, [9])).resolves.toEqual(
+        expect.objectContaining({ output: [1001] }),
+      );
+      expect(run(program, [100])).resolves.toEqual(
+        expect.objectContaining({ output: [1001] }),
+      );
     });
   });
+});
+
+it('waits for the input data available', async () => {
+  const program = [3, 2, 0];
+  const input: number[] = [];
+  const runPromise = run(program, input);
+  await timeout(50);
+  input.push(99);
+  expect(runPromise).resolves.toEqual(
+    expect.objectContaining({ program: [3, 2, 99] }),
+  );
 });

@@ -10,6 +10,8 @@ enum Operation {
   Equals = 8,
 }
 
+export const EXECUTION_TIMEOUT = 100;
+
 enum Mode {
   Position = 0,
   Immediate = 1,
@@ -77,7 +79,14 @@ const multiply: Action<Three, ModeTwo> = async ({
   return { pointer: pointer + 4 };
 };
 
+export const timeout = (time: number) =>
+  new Promise(resolve => setTimeout(resolve, time));
+
 const save: Action<One> = async ({ program, params: [to], input, pointer }) => {
+  while (input.length === 0) {
+    await timeout(EXECUTION_TIMEOUT);
+  }
+
   program[to] = input.shift();
   return { pointer: pointer + 2 };
 };
