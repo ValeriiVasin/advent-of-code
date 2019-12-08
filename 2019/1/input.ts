@@ -1,11 +1,4 @@
-const getFuel = mass => Math.floor(mass / 3) - 2;
-
-console.assert(getFuel(12) === 2, 'check fuel');
-console.assert(getFuel(14) === 2, 'check fuel');
-console.assert(getFuel(1969) === 654, 'check fuel');
-console.assert(getFuel(100756) === 33583, 'check fuel');
-
-const input = [
+export const input = [
   106001,
   131342,
   51187,
@@ -107,6 +100,3 @@ const input = [
   106361,
   82104,
 ];
-
-const answer = input.reduce((acc, mass) => acc + getFuel(mass), 0);
-console.log('answer', answer);

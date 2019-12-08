@@ -1,10 +1,10 @@
-const {
+import {
   isPassword,
   isPasswordImproved,
   isIncreasing,
   toDigits,
   toGroups,
-} = require('./solution');
+} from './lib';
 
 describe('to digits', () => {
   it('converts value to digits', () => {

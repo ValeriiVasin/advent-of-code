@@ -5,7 +5,8 @@
     "allowSyntheticDefaultImports": true,
     "target": "es6",
     "noImplicitAny": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "lib": ["ES2019"]
   },
   "include": ["2019/**/*"]
 }

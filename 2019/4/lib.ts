@@ -1,10 +1,10 @@
-function toDigits(value) {
+export function toDigits(value: number) {
   return String(value)
     .split('')
     .map(_ => Number(_));
 }
 
-function isIncreasing(digits) {
+export function isIncreasing(digits: number[]) {
   let prev = digits[0];
   for (let i = 1; i < digits.length; i++) {
     const current = digits[i];
@@ -18,7 +18,7 @@ function isIncreasing(digits) {
   return true;
 }
 
-function toGroups(digits) {
+export function toGroups(digits: number[]): number[] {
   let prev = digits[0];
   const groups = [];
   let groupLength = 1;
@@ -40,7 +40,7 @@ function toGroups(digits) {
   return groups;
 }
 
-function isPassword(value) {
+export function isPassword(value: number) {
   const digits = toDigits(value);
 
   if (digits.length !== 6) {
@@ -54,7 +54,7 @@ function isPassword(value) {
   return toGroups(digits).some(length => length > 1);
 }
 
-function isPasswordImproved(value) {
+export function isPasswordImproved(value: number) {
   const digits = toDigits(value);
 
   if (digits.length !== 6) {
@@ -67,27 +67,3 @@ function isPasswordImproved(value) {
 
   return toGroups(digits).includes(2);
 }
-
-function solution(from, to, check) {
-  let count = 0;
-
-  for (let i = from; i <= to; i++) {
-    if (check(i)) {
-      count++;
-    }
-  }
-
-  return count;
-}
-
-console.log('answer #4.1', solution(125730, 579381, isPassword));
-console.log('answer #4.2', solution(125730, 579381, isPasswordImproved));
-
-module.exports = {
-  isIncreasing,
-  toDigits,
-  isPassword,
-  isPasswordImproved,
-  toGroups,
-  solution,
-};

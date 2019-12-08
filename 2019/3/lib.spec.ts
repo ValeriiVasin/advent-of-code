@@ -1,4 +1,4 @@
-const {
+import {
   toDiff,
   toPath,
   toLines,
@@ -10,7 +10,8 @@ const {
   isPointOnLine,
   solution,
   secondSolution,
-} = require('./solution');
+  Line,
+} from './lib';
 
 describe('diff', () => {
   it('right', () => {
@@ -66,11 +67,11 @@ describe('distance from center', () => {
 });
 
 describe('line', () => {
-  const horizontal = [
+  const horizontal: Line = [
     { x: 0, y: 0 },
     { x: 10, y: 0 },
   ];
-  const vertical = [
+  const vertical: Line = [
     { x: 0, y: 0 },
     { x: 0, y: 1 },
   ];
@@ -96,7 +97,7 @@ describe('check point on line', () => {
   it('horizontal', () => {
     const left = { x: 0, y: 0 };
     const right = { x: 100, y: 0 };
-    const line = [left, right];
+    const line: Line = [left, right];
     const yes = { x: 50, y: 0 };
     const no = { x: 5, y: 50 };
 
@@ -114,7 +115,7 @@ describe('check point on line', () => {
   it('vertical', () => {
     const bottom = { x: 0, y: 0 };
     const top = { x: 0, y: 10 };
-    const line = [bottom, top];
+    const line: Line = [bottom, top];
     const yes = { x: 0, y: 5 };
     const no = { x: 1, y: 5 };
 
@@ -132,11 +133,11 @@ describe('check point on line', () => {
 
 describe('find crossing point', () => {
   it('parallel', () => {
-    const one = [
+    const one: Line = [
       { x: 0, y: 0 },
       { x: 0, y: 1 },
     ];
-    const two = [
+    const two: Line = [
       { x: 1, y: 0 },
       { x: 1, y: 1 },
     ];
@@ -144,11 +145,11 @@ describe('find crossing point', () => {
   });
 
   it('crossing', () => {
-    const one = [
+    const one: Line = [
       { x: 0, y: 0 },
       { x: 0, y: 10 },
     ];
-    const two = [
+    const two: Line = [
       { x: 1, y: 1 },
       { x: -1, y: 1 },
     ];
@@ -156,11 +157,11 @@ describe('find crossing point', () => {
   });
 
   it('not parallel and not crossing', () => {
-    const one = [
+    const one: Line = [
       { x: 0, y: 0 },
       { x: 0, y: 2 },
     ];
-    const two = [
+    const two: Line = [
       { x: 2, y: 1 },
       { x: 1, y: 1 },
     ];

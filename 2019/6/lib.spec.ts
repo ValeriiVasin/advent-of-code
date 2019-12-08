@@ -1,9 +1,10 @@
-const {
+import {
   createMap,
   orbitsCount,
   totalOrbitsCount,
   transfersCount,
-} = require('./lib');
+  OrbitMap,
+} from './lib';
 
 describe('orbits count', () => {
   const lines = [
@@ -19,7 +20,7 @@ describe('orbits count', () => {
     'J)K',
     'K)L',
   ];
-  let map;
+  let map: OrbitMap;
 
   beforeEach(() => {
     map = createMap(lines);

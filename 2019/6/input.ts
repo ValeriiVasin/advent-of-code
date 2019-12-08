@@ -1,4 +1,4 @@
-module.exports = `
+export const input = `
 Z9G)Q7N
 D1W)7G9
 FP7)F5P

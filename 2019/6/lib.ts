@@ -1,4 +1,6 @@
-function createMap(lines) {
+export type OrbitMap = Map<string, null | string>;
+
+export function createMap(lines: string[]): OrbitMap {
   const map = new Map([['COM', null]]);
 
   for (let line of lines) {
@@ -9,7 +11,7 @@ function createMap(lines) {
   return map;
 }
 
-function pathToCenter(map, from) {
+function pathToCenter(map: OrbitMap, from: string): string[] {
   const path = [];
 
   while ((from = map.get(from))) {
@@ -19,11 +21,11 @@ function pathToCenter(map, from) {
   return path;
 }
 
-function orbitsCount(map, object) {
+export function orbitsCount(map: OrbitMap, object: string): number {
   return pathToCenter(map, object).length;
 }
 
-function totalOrbitsCount(map) {
+export function totalOrbitsCount(map: OrbitMap) {
   let count = 0;
 
   for (let orbit of map.keys()) {
@@ -33,7 +35,7 @@ function totalOrbitsCount(map) {
   return count;
 }
 
-function transfersCount(map, from, to) {
+export function transfersCount(map: OrbitMap, from: string, to: string) {
   const fromPath = pathToCenter(map, from);
   const toPath = pathToCenter(map, to);
 
@@ -44,10 +46,3 @@ function transfersCount(map, from, to) {
 
   return fromPath.length + toPath.length;
 }
-
-module.exports = {
-  orbitsCount,
-  createMap,
-  totalOrbitsCount,
-  transfersCount,
-};
