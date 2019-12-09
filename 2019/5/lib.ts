@@ -17,16 +17,6 @@ enum Mode {
   Immediate = 1,
 }
 
-const OP_EXIT = 99;
-const OP_ADD = 1;
-const OP_MULT = 2;
-const OP_SAVE = 3;
-const OP_OUTPUT = 4;
-const OP_JUMP_IF_TRUE = 5;
-const OP_JUMP_IF_FALSE = 6;
-const OP_LESS_THAN = 7;
-const OP_EQUALS = 8;
-
 type One = [number];
 type ModeOne = [Mode];
 type Two = [number, number];
@@ -47,15 +37,15 @@ interface Action<P = any, M = any> {
 }
 
 const params = new Map([
-  [OP_EXIT, 0],
-  [OP_ADD, 3],
-  [OP_MULT, 3],
-  [OP_SAVE, 1],
-  [OP_OUTPUT, 1],
-  [OP_JUMP_IF_TRUE, 2],
-  [OP_JUMP_IF_FALSE, 2],
-  [OP_LESS_THAN, 3],
-  [OP_EQUALS, 3],
+  [Operation.Exit, 0],
+  [Operation.Add, 3],
+  [Operation.Multiply, 3],
+  [Operation.Save, 1],
+  [Operation.Output, 1],
+  [Operation.JumpIfTrue, 2],
+  [Operation.JumpIfFalse, 2],
+  [Operation.LessThan, 3],
+  [Operation.Equals, 3],
 ]);
 
 const add: Action<Three, ModeTwo> = async ({
