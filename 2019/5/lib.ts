@@ -8,19 +8,25 @@ enum Operation {
   JumpIfFalse = 6,
   LessThan = 7,
   Equals = 8,
+  AdjustRelativeBase = 9,
 }
 
 export const EXECUTION_TIMEOUT = 1;
 
+export const timeout = (time: number) =>
+  new Promise(resolve => setTimeout(resolve, time));
+
 enum Mode {
   Position = 0,
   Immediate = 1,
+  Relative = 2,
 }
 
 type One = [number];
 type ModeOne = [Mode];
 type Two = [number, number];
 type ModeTwo = [Mode, Mode];
+type ModeThree = [Mode, Mode, Mode];
 type Three = [number, number, number];
 
 interface Action<P = any, M = any> {
@@ -31,8 +37,10 @@ interface Action<P = any, M = any> {
     params: P;
     modes?: M;
     pointer: number;
+    base: number;
   }): Promise<{
     pointer: number;
+    base: number;
   }>;
 }
 
@@ -46,38 +54,52 @@ const params = new Map([
   [Operation.JumpIfFalse, 2],
   [Operation.LessThan, 3],
   [Operation.Equals, 3],
+  [Operation.AdjustRelativeBase, 1],
 ]);
 
-const add: Action<Three, ModeTwo> = async ({
+const add: Action<Three, ModeThree> = async ({
   program,
   params: [a, b, to],
-  modes: [modeA, modeB],
+  modes: [modeA, modeB, modeTo],
   pointer,
+  base,
 }) => {
-  program[to] = getValue(program, a, modeA) + getValue(program, b, modeB);
-  return { pointer: pointer + 4 };
+  const address = getAddress({ value: to, mode: modeTo, base });
+  program[address] =
+    getValue(program, { value: a, mode: modeA, base }) +
+    getValue(program, { value: b, mode: modeB, base });
+  return { pointer: pointer + 4, base };
 };
 
-const multiply: Action<Three, ModeTwo> = async ({
+const multiply: Action<Three, ModeThree> = async ({
   program,
   params: [a, b, to],
-  modes: [modeA, modeB],
+  modes: [modeA, modeB, modeTo],
   pointer,
+  base,
 }) => {
-  program[to] = getValue(program, a, modeA) * getValue(program, b, modeB);
-  return { pointer: pointer + 4 };
+  const address = getAddress({ value: to, mode: modeTo, base });
+  program[address] =
+    getValue(program, { value: a, mode: modeA, base }) *
+    getValue(program, { value: b, mode: modeB, base });
+  return { pointer: pointer + 4, base };
 };
 
-export const timeout = (time: number) =>
-  new Promise(resolve => setTimeout(resolve, time));
-
-const save: Action<One> = async ({ program, params: [to], input, pointer }) => {
+const save: Action<One> = async ({
+  program,
+  params: [to],
+  modes: [modeTo],
+  input,
+  pointer,
+  base,
+}) => {
   while (input.length === 0) {
     await timeout(EXECUTION_TIMEOUT);
   }
 
-  program[to] = input.shift();
-  return { pointer: pointer + 2 };
+  const address = getAddress({ value: to, mode: modeTo, base });
+  program[address] = input.shift();
+  return { pointer: pointer + 2, base };
 };
 
 const output: Action<One, ModeOne> = async ({
@@ -86,9 +108,10 @@ const output: Action<One, ModeOne> = async ({
   output,
   modes: [mode],
   pointer,
+  base,
 }) => {
-  output.push(getValue(program, value, mode));
-  return { pointer: pointer + 2 };
+  output.push(getValue(program, { value, mode, base }));
+  return { pointer: pointer + 2, base };
 };
 
 const jumpIfTrue: Action<Two, ModeTwo> = async ({
@@ -96,11 +119,14 @@ const jumpIfTrue: Action<Two, ModeTwo> = async ({
   params: [a, b],
   modes: [modeA, modeB],
   pointer,
+  base,
 }) => {
-  const aValue = getValue(program, a, modeA);
-  const bValue = getValue(program, b, modeB);
+  const aValue = getValue(program, { value: a, mode: modeA, base });
+  const bValue = getValue(program, { value: b, mode: modeB, base });
 
-  return aValue === 0 ? { pointer: pointer + 3 } : { pointer: bValue };
+  return aValue === 0
+    ? { pointer: pointer + 3, base }
+    : { pointer: bValue, base };
 };
 
 const jumpIfFalse: Action<Two, ModeTwo> = async ({
@@ -108,35 +134,53 @@ const jumpIfFalse: Action<Two, ModeTwo> = async ({
   params: [a, b],
   modes: [modeA, modeB],
   pointer,
+  base,
 }) => {
-  const aValue = getValue(program, a, modeA);
-  const bValue = getValue(program, b, modeB);
+  const aValue = getValue(program, { value: a, mode: modeA, base });
+  const bValue = getValue(program, { value: b, mode: modeB, base });
 
-  return aValue === 0 ? { pointer: bValue } : { pointer: pointer + 3 };
+  return aValue === 0
+    ? { pointer: bValue, base }
+    : { pointer: pointer + 3, base };
 };
 
-const lessThan: Action<Three, ModeTwo> = async ({
+const lessThan: Action<Three, ModeThree> = async ({
   program,
   params: [a, b, to],
-  modes: [modeA, modeB],
+  modes: [modeA, modeB, modeTo],
   pointer,
+  base,
 }) => {
-  const valueA = getValue(program, a, modeA);
-  const valueB = getValue(program, b, modeB);
-  program[to] = valueA < valueB ? 1 : 0;
-  return { pointer: pointer + 4 };
+  const valueA = getValue(program, { value: a, mode: modeA, base });
+  const valueB = getValue(program, { value: b, mode: modeB, base });
+  const address = getAddress({ value: to, mode: modeTo, base });
+  program[address] = valueA < valueB ? 1 : 0;
+  return { pointer: pointer + 4, base };
 };
 
-const equals: Action<Three, ModeTwo> = async ({
+const equals: Action<Three, ModeThree> = async ({
   program,
   params: [a, b, to],
-  modes: [modeA, modeB],
+  modes: [modeA, modeB, modeTo],
   pointer,
+  base,
 }) => {
-  const valueA = getValue(program, a, modeA);
-  const valueB = getValue(program, b, modeB);
-  program[to] = valueA === valueB ? 1 : 0;
-  return { pointer: pointer + 4 };
+  const valueA = getValue(program, { value: a, mode: modeA, base });
+  const valueB = getValue(program, { value: b, mode: modeB, base });
+  const address = getAddress({ value: to, mode: modeTo, base });
+  program[address] = valueA === valueB ? 1 : 0;
+  return { pointer: pointer + 4, base };
+};
+
+const adjustRelativeBase: Action<One, ModeOne> = async ({
+  program,
+  params: [a],
+  modes: [mode],
+  pointer,
+  base,
+}) => {
+  const value = getValue(program, { value: a, mode, base });
+  return { pointer: pointer + 2, base: base + value };
 };
 
 const actions = new Map<Operation, Action>([
@@ -148,6 +192,7 @@ const actions = new Map<Operation, Action>([
   [Operation.JumpIfFalse, jumpIfFalse],
   [Operation.LessThan, lessThan],
   [Operation.Equals, equals],
+  [Operation.AdjustRelativeBase, adjustRelativeBase],
 ]);
 
 export function parseInstruction(
@@ -181,6 +226,7 @@ export async function run({
   output?: number[];
 }) {
   let i = 0;
+  let relativeBase = 0;
   while (i < program.length) {
     const { code, modes } = parseInstruction(program[i]);
 
@@ -189,21 +235,59 @@ export async function run({
     }
 
     const action = actions.get(code);
-    const { pointer } = await action({
+    const { pointer, base } = await action({
       program,
       input,
       output,
       params: program.slice(i + 1, i + 1 + modes.length),
       modes,
       pointer: i,
+      base: relativeBase,
     });
 
     i = pointer;
+    relativeBase = base;
   }
 
   return { program, output };
 }
 
-function getValue(program: number[], value: number, mode: Mode): number {
-  return mode === Mode.Immediate ? value : program[value];
+// sometimes we try to read from the memory that was not
+// initialized yet. For that case we need to return 0 as a default
+function wrapValue(value: number | void) {
+  return typeof value === 'undefined' ? 0 : value;
 }
+
+function getValue(
+  program: number[],
+  { value, mode, base }: { value: number; mode: Mode; base: number },
+): number {
+  if (mode === Mode.Immediate) {
+    return wrapValue(value);
+  }
+
+  if (mode === Mode.Position) {
+    return wrapValue(program[value]);
+  }
+
+  // relative
+  return wrapValue(program[base + value]);
+}
+
+const getAddress = ({
+  value,
+  mode,
+  base,
+}: {
+  value: number;
+  mode: Mode;
+  base: number;
+}): number => {
+  if (mode === Mode.Relative) {
+    return base + value;
+  }
+
+  // position mode
+  // written to parameters guaranteed not to be in immediate mode
+  return value;
+};

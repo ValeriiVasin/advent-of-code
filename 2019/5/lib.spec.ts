@@ -238,3 +238,74 @@ it('waits for the input data available', async () => {
     expect.objectContaining({ program: [3, 2, 99] }),
   );
 });
+
+// https://adventofcode.com/2019/day/9
+describe.only('relative mode', () => {
+  it('relative mode param', async () => {
+    const program = [204, 2, 99];
+    await expect(run({ program })).resolves.toEqual(
+      expect.objectContaining({
+        output: [99],
+      }),
+    );
+  });
+
+  it('relative mode with modification operation', async () => {
+    const program = [109, 1, 204, 3, 99];
+    await expect(run({ program })).resolves.toEqual(
+      expect.objectContaining({
+        output: [99],
+      }),
+    );
+  });
+
+  it('#1', async () => {
+    const program = [
+      109,
+      1,
+      204,
+      -1,
+      1001,
+      100,
+      1,
+      100,
+      1008,
+      100,
+      16,
+      101,
+      1006,
+      101,
+      0,
+      99,
+    ];
+
+    await expect(run({ program })).resolves.toEqual(
+      expect.objectContaining({ output: [...program] }),
+    );
+  });
+
+  it('#2', async () => {
+    const program = [1102, 34915192, 34915192, 7, 4, 7, 99, 0];
+    await expect(run({ program })).resolves.toEqual(
+      expect.objectContaining({ output: [1219070632396864] }),
+    );
+  });
+
+  it('#3', async () => {
+    const program = [104, 1125899906842624, 99];
+    await expect(run({ program })).resolves.toEqual(
+      expect.objectContaining({ output: [1125899906842624] }),
+    );
+  });
+
+  it('parameters in relative mode can be read from or written to', async () => {
+    const program = [109, 2, 203, 1, 99];
+    const input = [5];
+
+    await expect(run({ program, input })).resolves.toEqual(
+      expect.objectContaining({
+        program: [109, 2, 203, 5, 99],
+      }),
+    );
+  });
+});
