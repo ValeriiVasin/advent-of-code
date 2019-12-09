@@ -62,19 +62,20 @@ describe('normal mode', () => {
 describe('feedback loop mode', () => {
   describe('amplify', () => {
     it('#4', async () => {
-      await expect(
-        amplify(programFour, [9, 8, 7, 6, 5], Mode.FeedbackLoop),
-      ).resolves.toBe(139629729);
+      await expect(amplify(programFour, [9, 8, 7, 6, 5])).resolves.toBe(
+        139629729,
+      );
     });
 
     it('#5', async () => {
-      await expect(
-        amplify(programFive, [9, 7, 8, 5, 6], Mode.FeedbackLoop),
-      ).resolves.toBe(18216);
+      await expect(amplify(programFive, [9, 7, 8, 5, 6])).resolves.toBe(18216);
     });
   });
 
-  describe.skip('find max signal', () => {
+  describe('find max signal', () => {
+    // waiting model is SO bad (if times out - increase to more)...
+    beforeEach(() => jest.setTimeout(30000));
+
     it('#4', async () => {
       await expect(
         findMaxSignal(programFour, Mode.FeedbackLoop),

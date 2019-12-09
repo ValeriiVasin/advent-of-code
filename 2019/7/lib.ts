@@ -1,4 +1,4 @@
-import { run } from '../5/lib';
+import { run, timeout } from '../5/lib';
 
 export function permutations(
   available: number[],
@@ -37,7 +37,8 @@ export const findMaxSignal = async (
   let maxPhases: number[];
 
   for (let phases of permutations(availablePhases)) {
-    const signal = await amplify(program, phases, mode);
+    const signal = await amplify(program, phases);
+
     if (signal > maxSignal) {
       maxSignal = signal;
       maxPhases = phases;
@@ -47,11 +48,7 @@ export const findMaxSignal = async (
   return { signal: maxSignal, phases: maxPhases };
 };
 
-export const amplify = async (
-  program: number[],
-  phases: number[],
-  mode = Mode.Normal,
-) => {
+export const amplify = async (program: number[], phases: number[]) => {
   const firstInput: number[] = [phases[0], 0];
 
   let prevOutput: number[] = [];
@@ -62,22 +59,14 @@ export const amplify = async (
       index === phases.length - 1 ? firstInput : [phases[index + 1]];
     prevOutput = currentOutput;
 
-    const currentRun = run({
-      program: [...program],
-      input: currentInput,
-      output: currentOutput,
-    });
-
-    runs.push(currentRun);
-
-    if (mode === Mode.Normal) {
-      await currentRun;
-    }
+    runs.push(
+      run({
+        program: [...program],
+        input: currentInput,
+        output: currentOutput,
+      }),
+    );
   }
 
-  if (mode === Mode.Normal) {
-    return (await runs.pop()).output.pop();
-  }
-
-  return (await Promise.all(runs)).pop().output.pop();
+  return (await runs.pop()).output.pop();
 };

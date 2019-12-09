@@ -10,7 +10,7 @@ enum Operation {
   Equals = 8,
 }
 
-export const EXECUTION_TIMEOUT = 10;
+export const EXECUTION_TIMEOUT = 1;
 
 enum Mode {
   Position = 0,
@@ -32,7 +32,6 @@ type ModeOne = [Mode];
 type Two = [number, number];
 type ModeTwo = [Mode, Mode];
 type Three = [number, number, number];
-type ModeThree = [Mode, Mode, Mode];
 
 interface Action<P = any, M = any> {
   (params: {
