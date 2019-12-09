@@ -1,3 +1,9 @@
+export enum Color {
+  Black,
+  White,
+  Transparent,
+}
+
 function split(str: string, length: number): string[] {
   const result: string[] = [];
 
@@ -44,4 +50,42 @@ export const findLayer = (layers: Array<string[]>): string[] => {
   }
 
   return minLayer;
+};
+
+export const pixelColor = (
+  layers: Array<string[]>,
+  { row, col }: { row: number; col: number },
+): Color => {
+  const black = String(Color.Black);
+  const white = String(Color.White);
+
+  for (let layer of layers) {
+    const char = layer[row][col];
+
+    if (char === black) {
+      return Color.Black;
+    }
+
+    if (char === white) {
+      return Color.White;
+    }
+  }
+
+  return Color.Transparent;
+};
+
+export const layersToImage = (layers: Array<string[]>): string[] => {
+  const height = layers[0].length;
+  const width = layers[0][0].length;
+  const result: string[] = [];
+
+  for (let row = 0; row < height; row++) {
+    let line: string = '';
+    for (let col = 0; col < width; col++) {
+      line += String(pixelColor(layers, { row, col }));
+    }
+    result.push(line);
+  }
+
+  return result;
 };
