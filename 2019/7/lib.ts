@@ -37,7 +37,7 @@ export const findMaxSignal = async (
   let maxPhases: number[];
 
   for (let phases of permutations(availablePhases)) {
-    const signal = await amplify(program, phases);
+    const signal = await amplify(program, phases, mode);
     if (signal > maxSignal) {
       maxSignal = signal;
       maxPhases = phases;
@@ -52,14 +52,32 @@ export const amplify = async (
   phases: number[],
   mode = Mode.Normal,
 ) => {
-  let value = 0;
-  for (let phase of phases) {
-    const { output } = await run({
+  const firstInput: number[] = [phases[0], 0];
+
+  let prevOutput: number[] = [];
+  const runs = [];
+  for (let index = 0; index < phases.length; index++) {
+    const currentInput: number[] = index === 0 ? firstInput : prevOutput;
+    const currentOutput: number[] =
+      index === phases.length - 1 ? firstInput : [phases[index + 1]];
+    prevOutput = currentOutput;
+
+    const currentRun = run({
       program: [...program],
-      input: [phase, value],
+      input: currentInput,
+      output: currentOutput,
     });
-    value = output[0];
+
+    runs.push(currentRun);
+
+    if (mode === Mode.Normal) {
+      await currentRun;
+    }
   }
 
-  return value;
+  if (mode === Mode.Normal) {
+    return (await runs.pop()).output.pop();
+  }
+
+  return (await Promise.all(runs)).pop().output.pop();
 };

@@ -10,7 +10,7 @@ enum Operation {
   Equals = 8,
 }
 
-export const EXECUTION_TIMEOUT = 100;
+export const EXECUTION_TIMEOUT = 10;
 
 enum Mode {
   Position = 0,
