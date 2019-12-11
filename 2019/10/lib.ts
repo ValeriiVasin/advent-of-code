@@ -102,13 +102,13 @@ export const findLines = (
   return map;
 };
 
-export const parseInput = (input: string): Point[] => {
+export const parseInput = (input: string, needle = '#'): Point[] => {
   const lines = input.trim().split('\n');
   const points: Point[] = [];
 
   for (const [y, line] of lines.entries()) {
     for (const [x, char] of line.split('').entries()) {
-      if (char === '#') {
+      if (char === needle) {
         points.push({ x, y });
       }
     }
@@ -165,4 +165,71 @@ export const findBestAsteroid = (
   }
 
   return { point: maxPoint, viewable: maxCount };
+};
+
+export const prepareVaporization = (
+  laser: Point,
+  points: Point[],
+): Array<Point[]> => {
+  const lines = findLines(laser, points);
+
+  // sort lines by `k` ASC, vertical line should go prior
+  const vaporizationLines = [...lines.values()].sort((lineA, lineB) => {
+    const eqA: Equation = findEquation(lineA[0], lineA[1]);
+    const eqB: Equation = findEquation(lineB[0], lineB[1]);
+
+    if (isVertical(eqA)) {
+      return -1;
+    }
+
+    if (isVertical(eqB)) {
+      return 1;
+    }
+
+    return eqA.k - eqB.k;
+  });
+
+  const first: Array<Point[]> = [];
+  const second: Array<Point[]> = [];
+  for (let line of vaporizationLines) {
+    const laserPointIndex = line.findIndex(
+      point => point.x === laser.x && point.y === laser.y,
+    );
+    const smallerThanLaser = line.slice(0, laserPointIndex);
+    const biggerThanLaser = line.slice(laserPointIndex + 1);
+
+    const isVerticalLine = isVertical(findEquation(line[0], line[1]));
+
+    if (isVerticalLine) {
+      first.push(smallerThanLaser.reverse());
+      second.push(biggerThanLaser);
+      continue;
+    }
+
+    first.push(biggerThanLaser);
+    second.push(smallerThanLaser.reverse());
+  }
+
+  return [...first, ...second].filter(arr => arr.length > 0);
+};
+
+export const vaporize = (laser: Point, points: Point[]): Point[] => {
+  const lines = prepareVaporization(laser, points);
+  const result: Point[] = [];
+
+  let hasChanges = true;
+  while (hasChanges) {
+    hasChanges = false;
+
+    for (let line of lines) {
+      if (line.length === 0) {
+        continue;
+      }
+
+      hasChanges = true;
+      result.push(line.shift());
+    }
+  }
+
+  return result;
 };

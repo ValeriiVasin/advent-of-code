@@ -6,8 +6,10 @@ import {
   parseInput,
   countViewableAsteroids,
   findBestAsteroid,
+  prepareVaporization,
+  vaporize,
 } from './lib';
-import { one, two, three, four, five } from './fixtures';
+import { one, two, three, four, five, six } from './fixtures';
 
 describe('find equation', () => {
   it('#1', () => {
@@ -173,5 +175,83 @@ describe('find best asteroid', () => {
       point: { x: 11, y: 13 },
       viewable: 210,
     });
+  });
+});
+
+describe.only('vaporization', () => {
+  const laser: Point = { x: 0, y: 0 };
+  const points: Point[] = [
+    { x: 0, y: 1 },
+    { x: 0, y: 2 },
+    { x: 1, y: 1 },
+    { x: 2, y: 2 },
+    { x: 1, y: 0 },
+    { x: 1, y: -1 },
+    { x: 0, y: -1 },
+    { x: -1, y: -1 },
+    { x: -1, y: 0 },
+    { x: -1, y: 1 },
+  ];
+
+  it('prepare lines for vaporization', () => {
+    expect(prepareVaporization(laser, points)).toEqual([
+      [{ x: 0, y: -1 }],
+      [{ x: 1, y: -1 }],
+      [{ x: 1, y: 0 }],
+      [
+        { x: 1, y: 1 },
+        { x: 2, y: 2 },
+      ],
+      [
+        { x: 0, y: 1 },
+        { x: 0, y: 2 },
+      ],
+      [{ x: -1, y: 1 }],
+      [{ x: -1, y: 0 }],
+      [{ x: -1, y: -1 }],
+    ]);
+  });
+
+  it('vaporization list', () => {
+    expect(vaporize(laser, points)).toEqual([
+      { x: 0, y: -1 },
+      { x: 1, y: -1 },
+      { x: 1, y: 0 },
+      { x: 1, y: 1 },
+      { x: 0, y: 1 },
+      { x: -1, y: 1 },
+      { x: -1, y: 0 },
+      { x: -1, y: -1 },
+      { x: 2, y: 2 },
+      { x: 0, y: 2 },
+    ]);
+  });
+
+  it('works for provided example #6', () => {
+    const points = parseInput(six);
+    const [laser] = parseInput(six, 'X');
+    const asteroids = vaporize(laser, points);
+
+    expect(asteroids[0]).toEqual({ x: 8, y: 1 });
+    expect(asteroids[1]).toEqual({ x: 9, y: 0 });
+    expect(asteroids[8]).toEqual({ x: 15, y: 1 });
+  });
+
+  it('works for provided example #5 with the station', () => {
+    const points = parseInput(five);
+    const laser: Point = { x: 11, y: 13 };
+    const asteroids = vaporize(laser, points);
+
+    expect(asteroids[0]).toEqual({ x: 11, y: 12 });
+    expect(asteroids[1]).toEqual({ x: 12, y: 1 });
+    expect(asteroids[2]).toEqual({ x: 12, y: 2 });
+    expect(asteroids[9]).toEqual({ x: 12, y: 8 });
+    expect(asteroids[19]).toEqual({ x: 16, y: 0 });
+    expect(asteroids[49]).toEqual({ x: 16, y: 9 });
+    expect(asteroids[99]).toEqual({ x: 10, y: 16 });
+    expect(asteroids[198]).toEqual({ x: 9, y: 6 });
+    expect(asteroids[199]).toEqual({ x: 8, y: 2 });
+    expect(asteroids[200]).toEqual({ x: 10, y: 9 });
+    expect(asteroids[298]).toEqual({ x: 11, y: 1 });
   });
 });
