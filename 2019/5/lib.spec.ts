@@ -1,4 +1,4 @@
-import { parseInstruction, run, timeout } from './lib';
+import { parseInstruction, run, timeout, configure } from './lib';
 
 describe('parsing instruction', () => {
   it('parses instructions', () => {
@@ -240,7 +240,7 @@ it('waits for the input data available', async () => {
 });
 
 // https://adventofcode.com/2019/day/9
-describe.only('relative mode', () => {
+describe('relative mode', () => {
   it('relative mode param', async () => {
     const program = [204, 2, 99];
     await expect(run({ program })).resolves.toEqual(
@@ -308,4 +308,14 @@ describe.only('relative mode', () => {
       }),
     );
   });
+});
+
+it('supports run with configuration', async () => {
+  const program = [3, 0, 4, 0, 3, 0, 4, 0, 99];
+  const input: number[] = [33, 42];
+  const output: number[] = [];
+  const software = configure({ program, input, output });
+  expect.assertions(1);
+  await software.start();
+  expect(output).toEqual([33, 42]);
 });

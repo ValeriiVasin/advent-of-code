@@ -1,4 +1,4 @@
-enum Operation {
+export enum Operation {
   Exit = 99,
   Add = 1,
   Multiply = 2,
@@ -251,6 +251,38 @@ export async function run({
 
   return { program, output };
 }
+
+export const configure = ({
+  program,
+  input = [],
+  output = [],
+}: {
+  program: number[];
+  input: number[];
+  output: number[];
+}): {
+  input: number[];
+  output: number[];
+  program: number[];
+  done: boolean;
+  start: () => ReturnType<typeof run>;
+} => {
+  let done: boolean = false;
+
+  const start = () =>
+    run({ program, input, output }).then(result => {
+      done = true;
+      return result;
+    });
+
+  return {
+    program,
+    start,
+    input,
+    output,
+    done,
+  };
+};
 
 // sometimes we try to read from the memory that was not
 // initialized yet. For that case we need to return 0 as a default
