@@ -315,7 +315,8 @@ it('supports run with configuration', async () => {
   const input: number[] = [33, 42];
   const output: number[] = [];
   const software = configure({ program, input, output });
-  expect.assertions(1);
+  expect.assertions(2);
   await software.start();
   expect(output).toEqual([33, 42]);
+  expect(software.isDone()).toBe(true);
 });

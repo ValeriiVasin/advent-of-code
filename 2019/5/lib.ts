@@ -264,7 +264,7 @@ export const configure = ({
   input: number[];
   output: number[];
   program: number[];
-  done: boolean;
+  isDone: () => boolean;
   start: () => ReturnType<typeof run>;
 } => {
   let done: boolean = false;
@@ -280,7 +280,7 @@ export const configure = ({
     start,
     input,
     output,
-    done,
+    isDone: () => done,
   };
 };
 
