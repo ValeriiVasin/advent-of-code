@@ -26,7 +26,7 @@ interface RobotInstruction {
 
 const pointToString = (point: Point) => `(${point.x},${point.y})`;
 
-const getColor = (painted: Map<string, Color>, point: Point): Color => {
+export const getColor = (painted: Map<string, Color>, point: Point): Color => {
   const key = pointToString(point);
   return painted.has(key) ? painted.get(key) : Color.Black;
 };
@@ -92,12 +92,15 @@ export function robot(
   };
 }
 
-export async function operate(program: number[]): Promise<Map<string, Color>> {
+export async function operate(
+  program: number[],
+  initialColor: Color = Color.Black,
+): Promise<Map<string, Color>> {
   const painted = new Map();
   const start: Point = { x: 0, y: 0 };
   const r2d2 = robot(painted, start, Direction.Up);
 
-  const input: number[] = [r2d2.getColor()];
+  const input: number[] = [initialColor];
   const output: number[] = [];
   const software = configure({ program, input, output });
 
