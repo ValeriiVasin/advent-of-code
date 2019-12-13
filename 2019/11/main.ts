@@ -31,8 +31,8 @@ function draw(map: Map<string, Color>) {
 }
 
 (async function main() {
-  // const paintedOne = await operate([...program]);
-  // console.log('answer #1:', paintedOne.size);
+  const paintedOne = await operate([...program]);
+  console.log('answer #1:', paintedOne.size);
   const paintedTwo = await operate([...program], Color.White);
 
   console.log('answer #2: LRZECGFE');
