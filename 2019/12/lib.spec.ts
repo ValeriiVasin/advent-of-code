@@ -1,5 +1,14 @@
 import { one, two } from './fixtures';
-import { applyGravity, move, motion, energy, totalEnergy } from './lib';
+import {
+  applyGravity,
+  move,
+  motion,
+  energy,
+  totalEnergy,
+  universeLoop,
+  greatestCommonDivisor,
+  lowestCommonDenominator,
+} from './lib';
 import { Moon } from './types';
 
 it('gravity', () => {
@@ -59,10 +68,28 @@ it('total energy', () => {
   ).toBe(179);
 });
 
+it('greatest common divisor', () => {
+  expect(greatestCommonDivisor(15, 3)).toBe(3);
+  expect(greatestCommonDivisor(50, 20)).toBe(10);
+});
+
+it('lowest common denominator', () => {
+  expect(lowestCommonDenominator(2, 3)).toBe(6);
+  expect(lowestCommonDenominator(25, 100)).toBe(100);
+});
+
 it('example #1', () => {
   expect(totalEnergy(motion(one, 10))).toBe(179);
 });
 
 it('example #2', () => {
   expect(totalEnergy(motion(two, 100))).toBe(1940);
+});
+
+it('universe loop #1', () => {
+  expect(universeLoop(one)).toBe(2772);
+});
+
+it('universe loop #2', () => {
+  expect(universeLoop(two)).toBe(4686774924);
 });
