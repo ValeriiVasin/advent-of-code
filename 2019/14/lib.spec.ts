@@ -4,6 +4,7 @@ import {
   parseReactionsList,
   ReactionList,
   toOre,
+  toFuel,
 } from './lib';
 import { one, two, three, four, five } from './fixtures';
 
@@ -76,5 +77,19 @@ describe('converts items by the list', () => {
     expect(toOre(parseReactionsList(five), { name: 'FUEL', amount: 1 })).toBe(
       2210736,
     );
+  });
+});
+
+describe('to fuel', () => {
+  it('#3', () => {
+    expect(toFuel(parseReactionsList(three), 1000000000000)).toBe(82892753);
+  });
+
+  it('#4', () => {
+    expect(toFuel(parseReactionsList(four), 1000000000000)).toBe(5586022);
+  });
+
+  it('#5', () => {
+    expect(toFuel(parseReactionsList(five), 1000000000000)).toBe(460664);
   });
 });

@@ -1,3 +1,7 @@
+/**
+ * @TODO rewrite to proper conversion algorithm
+ */
+
 export interface ReactionItem {
   name: string;
   amount: number;
@@ -129,4 +133,23 @@ export const toOre = (list: ReactionList, item: ReactionItem) => {
   }
 
   return items.get('ORE');
+};
+
+export const toFuel = (list: ReactionList, ore: number): number => {
+  let lo = 1;
+  let hi = ore;
+
+  while (lo <= hi) {
+    const mid = Math.floor((lo + hi) / 2);
+    const fuelOre = toOre(list, { name: 'FUEL', amount: mid });
+
+    if (fuelOre > ore) {
+      hi = mid - 1;
+      continue;
+    }
+
+    lo = mid + 1;
+  }
+
+  return hi;
 };
