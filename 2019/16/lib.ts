@@ -63,3 +63,12 @@ export const fft = function(str: string, phases: number = 1): string {
 
   return input.join('');
 };
+
+export const realFFT = (str: string): string => {
+  const times = 10_000;
+  const input = str.repeat(times);
+  const offset = Number(str.slice(0, 7));
+  const output = fft(input, 100);
+
+  return output.slice(offset, offset + 8);
+};
