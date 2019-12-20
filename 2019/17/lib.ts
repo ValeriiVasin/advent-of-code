@@ -98,3 +98,109 @@ export const findIntersections = (
 export const calibrate = (
   intersections: Array<{ x: number; y: number }>,
 ): number => intersections.reduce((acc, { x, y }) => acc + x * y, 0);
+
+const findRobot = (output: number[]): { x: number; y: number } => {
+  const arr = outputToArray(output);
+
+  for (let [y, line] of arr.entries()) {
+    for (let [x, value] of line.entries()) {
+      if (value === Area.Scaffold) {
+        continue;
+      }
+
+      if (value === Area.Space) {
+        continue;
+      }
+
+      return { x, y };
+    }
+  }
+
+  return { x: 0, y: 0 };
+};
+
+enum Rotation {
+  Left = 'L',
+  Right = 'R',
+}
+
+enum Direction {
+  Left = 60,
+  Right = 62,
+  Up = 94,
+  Down = 118,
+}
+
+const rotate = (direction: Direction, rotation: Rotation): Direction => {
+  switch (direction) {
+    case Direction.Up:
+      return rotation === Rotation.Left ? Direction.Left : Direction.Right;
+    case Direction.Right:
+      return rotation === Rotation.Left ? Direction.Up : Direction.Down;
+    case Direction.Down:
+      return rotation === Rotation.Left ? Direction.Right : Direction.Left;
+    case Direction.Left:
+      return rotation === Rotation.Left ? Direction.Down : Direction.Up;
+  }
+};
+
+const getDimensions = (output: number[]): { width: number; height: number } => {
+  const width = output.indexOf(Area.NewLine);
+  const height = output.length / (width + 1);
+
+  return { width, height };
+};
+
+const getOutputIndex = (
+  output: number[],
+  { x, y }: { x: number; y: number },
+): number => {
+  const { width } = getDimensions(output);
+
+  return y * (width + 1) + x;
+};
+
+const movement = (
+  steps: number,
+  direction: Direction,
+  { x, y }: { x: number; y: number },
+): { x: number; y: number } => {
+  switch (direction) {
+    case Direction.Up:
+      return { x, y: y - steps };
+    case Direction.Down:
+      return { x, y: y + steps };
+    case Direction.Right:
+      return { x: x + steps, y };
+    case Direction.Left:
+      return { x: x - steps, y };
+  }
+};
+
+export const move = (output: number[], char: string): number[] => {
+  const result = [...output];
+  const { x, y } = findRobot(output);
+  const abs = getOutputIndex(output, { x, y });
+  const direction: Direction = output[abs];
+
+  if (char === 'L') {
+    result[abs] = rotate(direction, Rotation.Left);
+    return result;
+  }
+
+  if (char === 'R') {
+    result[abs] = rotate(direction, Rotation.Right);
+    return result;
+  }
+
+  if (/^\d+$/.test(char)) {
+    const steps = Number(char);
+    const nextPosition = movement(steps, direction, { x, y });
+    result[abs] = Area.Scaffold;
+    result[getOutputIndex(result, nextPosition)] = direction;
+
+    return result;
+  }
+
+  return result;
+};
