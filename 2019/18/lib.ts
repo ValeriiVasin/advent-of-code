@@ -80,24 +80,22 @@ export const neighbours = function*(
   map: Array<string[]>,
   { x, y }: Point,
 ): Generator<Point, void> {
-  const up = map[y - 1]?.[x] ?? Block.Wall;
+  const yMax = map.length - 1;
+  const xMax = map[0].length - 1;
 
-  if (up !== Block.Wall) {
+  if (y > 0 && map[y - 1][x] !== Block.Wall) {
     yield { x, y: y - 1 };
   }
 
-  const down = map[y + 1]?.[x] ?? Block.Wall;
-  if (down !== Block.Wall) {
+  if (y < yMax && map[y + 1][x] !== Block.Wall) {
     yield { x, y: y + 1 };
   }
 
-  const left = map[y][x - 1] ?? Block.Wall;
-  if (left !== Block.Wall) {
+  if (x > 0 && map[y][x - 1] !== Block.Wall) {
     yield { x: x - 1, y };
   }
 
-  const right = map[y][x + 1] ?? Block.Wall;
-  if (right !== Block.Wall) {
+  if (x < xMax && map[y][x + 1] !== Block.Wall) {
     yield { x: x + 1, y };
   }
 };
