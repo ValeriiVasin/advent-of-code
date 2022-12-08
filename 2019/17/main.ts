@@ -20,7 +20,7 @@ import {
 })();
 
 const toASCII = (str: string): number[] => {
-  return str.split('').map(v => v.charCodeAt(0));
+  return str.split('').map((v) => v.charCodeAt(0));
 };
 
 const programInput = (

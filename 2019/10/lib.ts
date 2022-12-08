@@ -81,7 +81,7 @@ export const findLines = (
       continue;
     }
 
-    map.get(stringified).push(p);
+    map.get(stringified)?.push(p);
   }
 
   const compare = (a: number, b: number) => a - b;
@@ -123,7 +123,7 @@ const viewableAsteroids = (point: Point, line: Point[]) => {
     return 1;
   }
 
-  const index = line.findIndex(p => p.x == point.x && p.y === point.y);
+  const index = line.findIndex((p) => p.x == point.x && p.y === point.y);
 
   if (index === 0) {
     return 1;
@@ -154,7 +154,7 @@ export const findBestAsteroid = (
   points: Point[],
 ): { point: Point; viewable: number } => {
   let maxCount = -Infinity;
-  let maxPoint: Point;
+  let maxPoint: Point = { x: 0, y: 0 };
 
   for (let point of points) {
     const count = countViewableAsteroids(point, points);
@@ -193,7 +193,7 @@ export const prepareVaporization = (
   const second: Array<Point[]> = [];
   for (let line of vaporizationLines) {
     const laserPointIndex = line.findIndex(
-      point => point.x === laser.x && point.y === laser.y,
+      (point) => point.x === laser.x && point.y === laser.y,
     );
     const smallerThanLaser = line.slice(0, laserPointIndex);
     const biggerThanLaser = line.slice(laserPointIndex + 1);
@@ -210,7 +210,7 @@ export const prepareVaporization = (
     second.push(smallerThanLaser.reverse());
   }
 
-  return [...first, ...second].filter(arr => arr.length > 0);
+  return [...first, ...second].filter((arr) => arr.length > 0);
 };
 
 export const vaporize = (laser: Point, points: Point[]): Point[] => {
@@ -222,12 +222,14 @@ export const vaporize = (laser: Point, points: Point[]): Point[] => {
     hasChanges = false;
 
     for (let line of lines) {
-      if (line.length === 0) {
+      const point = line.shift();
+
+      if (!point) {
         continue;
       }
 
       hasChanges = true;
-      result.push(line.shift());
+      result.push(point);
     }
   }
 

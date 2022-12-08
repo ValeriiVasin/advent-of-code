@@ -1,4 +1,4 @@
-import { run, timeout } from '../5/lib';
+import { run } from '../5/lib';
 
 export function permutations(
   available: number[],
@@ -45,7 +45,7 @@ export const findMaxSignal = async (
     }
   }
 
-  return { signal: maxSignal, phases: maxPhases };
+  return { signal: maxSignal, phases: maxPhases! };
 };
 
 export const amplify = async (program: number[], phases: number[]) => {
@@ -68,5 +68,5 @@ export const amplify = async (program: number[], phases: number[]) => {
     );
   }
 
-  return (await runs.pop()).output.pop();
+  return (await runs.pop()!).output.pop()!;
 };

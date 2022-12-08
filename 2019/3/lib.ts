@@ -17,6 +17,8 @@ export const toDiff = (str: string): Point => {
       return { x: 0, y: value };
     case 'D':
       return { x: 0, y: -value };
+    default:
+      throw new Error(`Invalid direction value: ${direction}`);
   }
 };
 
@@ -108,8 +110,8 @@ export function solution(wireOne: string, wireTwo: string): number {
 
   return Math.min(
     ...crossingPoints
-      .map(point => distanceTo(point))
-      .filter(distance => distance > 0),
+      .map((point) => distanceTo(point))
+      .filter((distance) => distance > 0),
   );
 }
 

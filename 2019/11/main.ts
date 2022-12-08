@@ -10,7 +10,7 @@ function draw(map: Map<string, Color>) {
     const [x, y] = key
       .slice(1, -1)
       .split(',')
-      .map(_ => Number(_));
+      .map((_) => Number(_));
     minX = Math.min(minX, x);
     minY = Math.min(minY, y);
     maxX = Math.max(maxX, x);

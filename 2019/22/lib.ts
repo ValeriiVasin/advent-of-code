@@ -105,7 +105,7 @@ export const multiShuffle = (deck: number[], shuffles: string): number[] => {
   const parsedShuffles = shuffles
     .trim()
     .split('\n')
-    .map(_ => _.trim());
+    .map((_) => _.trim());
 
   for (let shuffle of parsedShuffles) {
     deck = smartShuffle(deck, shuffle);
@@ -123,7 +123,7 @@ export const trackMultiShuffle = (
   const parsedShuffles = shuffles
     .trim()
     .split('\n')
-    .map(_ => _.trim());
+    .map((_) => _.trim());
 
   for (let i = 0; i < times; i++) {
     for (let shuffle of parsedShuffles) {

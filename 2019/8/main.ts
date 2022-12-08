@@ -11,10 +11,7 @@ console.log('answer #8.1', countDigits(layer, 1) * countDigits(layer, 2));
 // - replace black color with "▩"
 // - join lines by \n
 export const visualize = (layer: string[]): string =>
-  layer
-    .join('\n')
-    .replace(/1/g, '▩')
-    .replace(/0/g, ' ');
+  layer.join('\n').replace(/1/g, '▩').replace(/0/g, ' ');
 
 console.log('answer #8.2:');
 console.log(visualize(layersToImage(layers)));

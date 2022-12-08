@@ -12,7 +12,7 @@ export interface Reaction {
   output: ReactionItem;
 }
 
-export type ReactionList = Map<string, Reaction>;
+export type ReactionList = Map<string, Reaction | null>;
 
 export const parseReactionItem = (item: string): ReactionItem => {
   const [amount, name] = item.split(' ');
@@ -22,16 +22,13 @@ export const parseReactionItem = (item: string): ReactionItem => {
 export const parseReaction = (reaction: string): Reaction => {
   const [input, output] = reaction.split('=>');
   return {
-    input: input
-      .trim()
-      .split(', ')
-      .map(parseReactionItem),
+    input: input.trim().split(', ').map(parseReactionItem),
     output: parseReactionItem(output.trim()),
   };
 };
 
 export const parseReactionsList = (list: string) => {
-  const map: ReactionList = new Map<string, Reaction>([['ORE', null]]);
+  const map: ReactionList = new Map([['ORE', null]]);
 
   for (let line of list.trim().split('\n')) {
     const reaction: Reaction = parseReaction(line);
@@ -56,8 +53,9 @@ const getLevel = (
   name: string,
   levels: Map<string, number>,
 ): number => {
-  if (levels.has(name)) {
-    return levels.get(name);
+  const cachedLevel = levels.get(name);
+  if (cachedLevel) {
+    return cachedLevel;
   }
 
   if (name === 'ORE') {
@@ -65,10 +63,16 @@ const getLevel = (
     return 0;
   }
 
+  const reaction = list.get(name);
+
+  if (!reaction) {
+    throw new Error(`Unknown reaction: ${name}`);
+  }
+
   const level =
     1 +
     Math.max(
-      ...list.get(name).input.map(item => getLevel(list, item.name, levels)),
+      ...reaction.input.map((item) => getLevel(list, item.name, levels)),
     );
 
   levels.set(name, level);
@@ -79,11 +83,11 @@ const pick = (
   items: Map<string, number>,
   levels: Map<string, number>,
 ): string => {
-  let maxName: string;
+  let maxName: string = '';
   let maxLevel = -Infinity;
 
   for (let name of items.keys()) {
-    const level = levels.get(name);
+    const level = levels.get(name) ?? -Infinity;
     if (level > maxLevel) {
       maxLevel = level;
       maxName = name;
@@ -105,6 +109,11 @@ const react = (
   }
 
   const amount = items.get(name);
+
+  if (typeof amount === 'undefined') {
+    return false;
+  }
+
   items.delete(name);
   const { input, output } = reaction;
   const times = Math.ceil(amount / output.amount);
@@ -113,10 +122,8 @@ const react = (
     const name = item.name;
     const neededAmount = item.amount * times;
 
-    items.set(
-      name,
-      items.has(name) ? items.get(name) + neededAmount : neededAmount,
-    );
+    const amount = items.get(name);
+    items.set(name, amount ? amount + neededAmount : neededAmount);
   }
 
   return true;
@@ -132,7 +139,7 @@ export const toOre = (list: ReactionList, item: ReactionItem) => {
     done = !react(list, items, name);
   }
 
-  return items.get('ORE');
+  return items.get('ORE') ?? 0;
 };
 
 export const toFuel = (list: ReactionList, ore: number): number => {

@@ -1,7 +1,7 @@
 export function toDigits(value: number) {
   return String(value)
     .split('')
-    .map(_ => Number(_));
+    .map((_) => Number(_));
 }
 
 export function isIncreasing(digits: number[]) {
@@ -51,7 +51,7 @@ export function isPassword(value: number) {
     return false;
   }
 
-  return toGroups(digits).some(length => length > 1);
+  return toGroups(digits).some((length) => length > 1);
 }
 
 export function isPasswordImproved(value: number) {

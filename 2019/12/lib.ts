@@ -31,7 +31,7 @@ export const move = (moon: Moon): Moon => {
 
 export const motion = (moons: Moon[], steps: number): Moon[] => {
   for (let i = 0; i < steps; i++) {
-    moons = moons.map(moon => move(applyGravity(moon, moons)));
+    moons = moons.map((moon) => move(applyGravity(moon, moons)));
   }
 
   return moons;

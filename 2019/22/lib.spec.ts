@@ -38,61 +38,25 @@ describe('shuffles', () => {
   describe('smart shuffle', () => {
     it('reverse', () => {
       expect(smartShuffle(deck, 'deal into new stack')).toEqual([
-        9,
-        8,
-        7,
-        6,
-        5,
-        4,
-        3,
-        2,
-        1,
-        0,
+        9, 8, 7, 6, 5, 4, 3, 2, 1, 0,
       ]);
     });
 
     it('cut positive', () => {
       expect(smartShuffle(deck, 'cut 3')).toEqual([
-        3,
-        4,
-        5,
-        6,
-        7,
-        8,
-        9,
-        0,
-        1,
-        2,
+        3, 4, 5, 6, 7, 8, 9, 0, 1, 2,
       ]);
     });
 
     it('cut negative', () => {
       expect(smartShuffle(deck, 'cut -4')).toEqual([
-        6,
-        7,
-        8,
-        9,
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
+        6, 7, 8, 9, 0, 1, 2, 3, 4, 5,
       ]);
     });
 
     it('increment', () => {
       expect(smartShuffle(deck, 'deal with increment 3')).toEqual([
-        0,
-        7,
-        4,
-        1,
-        8,
-        5,
-        2,
-        9,
-        6,
-        3,
+        0, 7, 4, 1, 8, 5, 2, 9, 6, 3,
       ]);
     });
   });
@@ -106,16 +70,7 @@ describe('shuffles', () => {
       `;
 
       expect(multiShuffle(deck, shuffles)).toEqual([
-        0,
-        3,
-        6,
-        9,
-        2,
-        5,
-        8,
-        1,
-        4,
-        7,
+        0, 3, 6, 9, 2, 5, 8, 1, 4, 7,
       ]);
     });
 
@@ -126,16 +81,7 @@ describe('shuffles', () => {
         deal into new stack
       `;
       expect(multiShuffle(deck, shuffles)).toEqual([
-        3,
-        0,
-        7,
-        4,
-        1,
-        8,
-        5,
-        2,
-        9,
-        6,
+        3, 0, 7, 4, 1, 8, 5, 2, 9, 6,
       ]);
     });
 
@@ -147,16 +93,7 @@ describe('shuffles', () => {
       `;
 
       expect(multiShuffle(deck, shuffles)).toEqual([
-        6,
-        3,
-        0,
-        7,
-        4,
-        1,
-        8,
-        5,
-        2,
-        9,
+        6, 3, 0, 7, 4, 1, 8, 5, 2, 9,
       ]);
     });
 
@@ -175,16 +112,7 @@ describe('shuffles', () => {
       `;
 
       expect(multiShuffle(deck, shuffles)).toEqual([
-        9,
-        2,
-        5,
-        8,
-        1,
-        4,
-        7,
-        0,
-        3,
-        6,
+        9, 2, 5, 8, 1, 4, 7, 0, 3, 6,
       ]);
     });
   });

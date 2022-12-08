@@ -1,4 +1,4 @@
-import { configure, run, timeout } from '../5/lib';
+import { configure, timeout } from '../5/lib';
 
 let guess: number[] = [];
 
@@ -35,7 +35,7 @@ const toPoint = (str: string): Point => {
   const [x, y] = str
     .slice(1, -1)
     .split(',')
-    .map(_ => Number(_));
+    .map((_) => Number(_));
   return { x, y };
 };
 
@@ -48,7 +48,7 @@ function draw(screen: Map<string, Tile>) {
     const [x, y] = key
       .slice(1, -1)
       .split(',')
-      .map(_ => Number(_));
+      .map((_) => Number(_));
     minX = Math.min(minX, x);
     minY = Math.min(minY, y);
     maxX = Math.max(maxX, x);
@@ -60,7 +60,9 @@ function draw(screen: Map<string, Tile>) {
     let line = '';
     for (let x = minX; x <= maxX; x++) {
       const tile = screen.get(toString({ x, y }));
-      line += getTileSymbol(tile);
+      if (tile) {
+        line += getTileSymbol(tile);
+      }
     }
     result.push(line);
   }
@@ -87,9 +89,9 @@ function updateScreen(
 ): number {
   while (output.length > 2) {
     const [x, y, tile]: [number, number, Tile] = [
-      output.shift(),
-      output.shift(),
-      output.shift(),
+      output.shift()!,
+      output.shift()!,
+      output.shift()!,
     ];
 
     if (x === -1 && y === 0) {
@@ -144,8 +146,10 @@ export async function interactiveGame(program: number[]): Promise<number> {
       await timeout(25);
       if (input.length === 0) {
         const v = get();
-        copy.push(v);
-        input.push(v);
+        if (v) {
+          copy.push(v);
+          input.push(v);
+        }
       }
       score = updateScreen(output, screen, score);
       draw(screen);

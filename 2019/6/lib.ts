@@ -1,7 +1,7 @@
 export type OrbitMap = Map<string, null | string>;
 
 export function createMap(lines: string[]): OrbitMap {
-  const map = new Map([['COM', null]]);
+  const map: OrbitMap = new Map([['COM', null]]);
 
   for (let line of lines) {
     const [parent, child] = line.split(')');
@@ -13,9 +13,11 @@ export function createMap(lines: string[]): OrbitMap {
 
 function pathToCenter(map: OrbitMap, from: string): string[] {
   const path = [];
+  let _from: string | null | undefined = map.get(from);
 
-  while ((from = map.get(from))) {
-    path.push(from);
+  while (_from) {
+    path.push(_from);
+    _from = map.get(_from);
   }
 
   return path;

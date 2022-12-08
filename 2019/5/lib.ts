@@ -14,7 +14,7 @@ export enum Operation {
 export const EXECUTION_TIMEOUT = 1;
 
 export const timeout = (time: number) =>
-  new Promise(resolve => setTimeout(resolve, time));
+  new Promise((resolve) => setTimeout(resolve, time));
 
 enum Mode {
   Position = 0,
@@ -35,7 +35,7 @@ interface Action<P = any, M = any> {
     input?: number[];
     output: number[];
     params: P;
-    modes?: M;
+    modes: M;
     pointer: number;
     base: number;
   }): Promise<{
@@ -60,10 +60,11 @@ const params = new Map([
 const add: Action<Three, ModeThree> = async ({
   program,
   params: [a, b, to],
-  modes: [modeA, modeB, modeTo],
+  modes,
   pointer,
   base,
 }) => {
+  const [modeA, modeB, modeTo] = modes!;
   const address = getAddress({ value: to, mode: modeTo, base });
   program[address] =
     getValue(program, { value: a, mode: modeA, base }) +
@@ -93,12 +94,12 @@ const save: Action<One> = async ({
   pointer,
   base,
 }) => {
-  while (input.length === 0) {
+  while (!input?.length) {
     await timeout(EXECUTION_TIMEOUT);
   }
 
   const address = getAddress({ value: to, mode: modeTo, base });
-  program[address] = input.shift();
+  program[address] = input.shift()!;
   return { pointer: pointer + 2, base };
 };
 
@@ -195,14 +196,15 @@ const actions = new Map<Operation, Action>([
   [Operation.AdjustRelativeBase, adjustRelativeBase],
 ]);
 
-export function parseInstruction(
-  value: number,
-): { code: number; modes: Mode[] } {
+export function parseInstruction(value: number): {
+  code: number;
+  modes: Mode[];
+} {
   const code: Operation = value % 100;
   const modes: Mode[] = [];
 
   value = Math.floor(value / 100);
-  const paramsAmount = params.get(code);
+  const paramsAmount = params.get(code)!;
 
   for (let i = 0; i < paramsAmount; i++) {
     const mode = value % 10;
@@ -234,7 +236,7 @@ export async function run({
       return { program, output };
     }
 
-    const action = actions.get(code);
+    const action = actions.get(code)!;
     const { pointer, base } = await action({
       program,
       input,
@@ -270,7 +272,7 @@ export const configure = ({
   let done: boolean = false;
 
   const start = () =>
-    run({ program, input, output }).then(result => {
+    run({ program, input, output }).then((result) => {
       done = true;
       return result;
     });

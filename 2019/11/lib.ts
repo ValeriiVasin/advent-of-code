@@ -28,7 +28,7 @@ const pointToString = (point: Point) => `(${point.x},${point.y})`;
 
 export const getColor = (painted: Map<string, Color>, point: Point): Color => {
   const key = pointToString(point);
-  return painted.has(key) ? painted.get(key) : Color.Black;
+  return painted.get(key) ?? Color.Black;
 };
 
 const setColor = (
@@ -108,8 +108,13 @@ export async function operate(
 
   const execute = () => {
     while (output.length >= 2) {
-      const color: Color = output.shift();
-      const turn: Turn = output.shift();
+      const color: Color | undefined = output.shift();
+      const turn: Turn | undefined = output.shift();
+
+      if (!color || !turn) {
+        continue;
+      }
+
       r2d2.execute({ color, turn });
       input.push(r2d2.getColor());
     }

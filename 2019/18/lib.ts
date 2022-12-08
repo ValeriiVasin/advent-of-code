@@ -15,9 +15,9 @@ export const isEntrance = (char: string) => char === Block.Entrance;
 export const isWall = (char: string) => char === Block.Wall;
 
 export const parse = (picture: string): Array<string[]> =>
-  picture.split('\n').map(line => line.split(''));
+  picture.split('\n').map((line) => line.split(''));
 
-export const findItem = (map: Array<string[]>, item: string): Point => {
+export const findItem = (map: Array<string[]>, item: string): Point | null => {
   for (let [y, line] of map.entries()) {
     for (let [x, char] of line.entries()) {
       if (char === item) {
@@ -25,6 +25,8 @@ export const findItem = (map: Array<string[]>, item: string): Point => {
       }
     }
   }
+
+  return null;
 };
 
 const pointToString = (point: Point): string => `${point.x};${point.y}`;
@@ -76,7 +78,7 @@ export const findKeys = (
   return result;
 };
 
-export const neighbours = function*(
+export const neighbours = function* (
   map: Array<string[]>,
   { x, y }: Point,
 ): Generator<Point, void> {
@@ -147,7 +149,7 @@ const gameStep = ({
       map,
       keysMap,
       steps: steps + stepsToKey,
-      point: keysMap.get(key),
+      point: keysMap.get(key)!,
       result,
       minResult,
     });
@@ -164,7 +166,7 @@ export const game = (
     map,
     steps: 0,
     keysMap: getKeysMap(map),
-    point: findItem(map, Block.Entrance),
+    point: findItem(map, Block.Entrance)!,
     result: new Set(),
     minResult: { steps: Infinity, keys: new Set() },
   });

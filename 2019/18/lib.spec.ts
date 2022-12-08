@@ -1,16 +1,16 @@
+import { five, four, one, three, two } from './fixtures';
 import {
+  Block,
+  findItem,
+  findKeys,
+  game,
+  getKeysMap,
   isDoor,
   isKey,
-  findItem,
-  parse,
-  Block,
-  findKeys,
   isWall,
   neighbours,
-  getKeysMap,
-  game,
+  parse,
 } from './lib';
-import { one, two, three, four, five } from './fixtures';
 
 test('is key', () => {
   expect(isKey('b')).toBe(true);
@@ -47,7 +47,7 @@ test('find neighbours', () => {
 
 test('find keys', () => {
   const map = parse(one);
-  const entrance = findItem(map, Block.Entrance);
+  const entrance = findItem(map, Block.Entrance)!;
   expect(findKeys(map, entrance)).toEqual([['a', 2]]);
 });
 

@@ -1,5 +1,5 @@
 export const parseInput = (str: string): number[] =>
-  str.split('').map(_ => Number(_));
+  str.split('').map((_) => Number(_));
 
 function* createPattern({
   pattern,
@@ -38,7 +38,7 @@ export const getPattern = ({
   repeat: number;
 }): number[] => [...createPattern({ pattern: [0, 1, 0, -1], repeat, length })];
 
-export const fft = function(str: string, phases: number = 1): string {
+export const fft = function (str: string, phases: number = 1): string {
   const length = str.length;
   let input = parseInput(str);
 

@@ -19,7 +19,7 @@ export const toLayers = (
   { width, height }: { width: number; height: number },
 ): Array<string[]> => {
   const layers = split(image, width * height);
-  return layers.map(layer => split(layer, width));
+  return layers.map((layer) => split(layer, width));
 };
 
 export const countDigits = (layer: string[], digit: number): number => {

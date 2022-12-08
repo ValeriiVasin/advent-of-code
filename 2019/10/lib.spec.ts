@@ -1,15 +1,15 @@
+import { five, four, one, six, three, two } from './fixtures';
 import {
-  findEquation,
-  Point,
+  countViewableAsteroids,
   equationToString,
+  findBestAsteroid,
+  findEquation,
   findLines,
   parseInput,
-  countViewableAsteroids,
-  findBestAsteroid,
+  Point,
   prepareVaporization,
   vaporize,
 } from './lib';
-import { one, two, three, four, five, six } from './fixtures';
 
 describe('find equation', () => {
   it('#1', () => {
@@ -90,7 +90,7 @@ describe('find lines', () => {
 
   it('ignores same as center point', () => {
     expect(
-      findLines(center, [center, center, center, yAxis]).get('x=0').length,
+      findLines(center, [center, center, center, yAxis])?.get('x=0')?.length,
     ).toBe(2);
   });
 
