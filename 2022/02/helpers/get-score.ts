@@ -23,6 +23,4 @@ export function getScore(
     shapeScore[getPlayerValue({ player, opponent })] +
     resultScore[playerGameResult[player]]
   );
-
-  return 0;
 }
