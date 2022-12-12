@@ -2,7 +2,7 @@ import { playerGameResult } from '../constants/player-game-result';
 import { playerGameValue } from '../constants/player-game-value';
 import { resultScore } from '../constants/result-score';
 import { shapeScore } from '../constants/shape-score';
-import { GameOptions, GamePair } from '../types';
+import type { GameOptions, GamePair } from '../types';
 import { getGameResult } from './get-game-result';
 import { getPlayerValue } from './get-player-value';
 

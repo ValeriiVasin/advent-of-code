@@ -1,4 +1,4 @@
-import { Moon } from './types';
+import type { Moon } from './types';
 
 const diff = (current: number, other: number) => {
   if (current === other) {

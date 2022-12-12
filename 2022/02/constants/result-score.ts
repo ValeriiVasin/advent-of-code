@@ -1,4 +1,4 @@
-import { GameResult } from '../types';
+import type { GameResult } from '../types';
 
 export const resultScore: Record<GameResult, number> = {
   Lose: 0,

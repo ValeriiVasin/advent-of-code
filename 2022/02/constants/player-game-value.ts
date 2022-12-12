@@ -1,4 +1,4 @@
-import { GameValue, PlayerValue } from '../types';
+import type { GameValue, PlayerValue } from '../types';
 
 export const playerGameValue: Record<PlayerValue, GameValue> = {
   X: 'Rock',

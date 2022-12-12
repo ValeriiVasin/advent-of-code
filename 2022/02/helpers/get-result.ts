@@ -1,5 +1,5 @@
 import { sum } from '../../helpers/sum';
-import { GameOptions } from '../types';
+import type { GameOptions } from '../types';
 import { getScore } from './get-score';
 import { parseInput } from './parse-input';
 import { readFixture } from './read-fixture';

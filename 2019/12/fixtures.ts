@@ -1,4 +1,4 @@
-import { Moon } from './types';
+import type { Moon } from './types';
 
 export const one: Moon[] = [
   { x: -1, y: 0, z: 2, vx: 0, vy: 0, vz: 0 },

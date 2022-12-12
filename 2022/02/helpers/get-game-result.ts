@@ -1,6 +1,6 @@
 import { opponentGameValue } from '../constants/opponent-game-value';
 import { playerGameValue } from '../constants/player-game-value';
-import { GamePair, GameResult } from '../types';
+import type { GamePair, GameResult } from '../types';
 
 export function getGameResult({ player, opponent }: GamePair): GameResult {
   const playerValue = playerGameValue[player];

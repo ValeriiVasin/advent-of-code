@@ -1,5 +1,5 @@
 import { EOL } from 'os';
-import { GamePair } from '../types';
+import type { GamePair } from '../types';
 
 const regexp = /^(?<opponent>[ABC]{1}) (?<player>[XYZ]{1})$/;
 

@@ -1,4 +1,4 @@
-import { GameValue } from '../types';
+import type { GameValue } from '../types';
 
 export const shapeScore: Record<GameValue, number> = {
   Rock: 1,

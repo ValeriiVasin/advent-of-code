@@ -1,15 +1,15 @@
 import { one, two } from './fixtures';
 import {
   applyGravity,
-  move,
-  motion,
   energy,
-  totalEnergy,
-  universeLoop,
   greatestCommonDivisor,
   lowestCommonDenominator,
+  motion,
+  move,
+  totalEnergy,
+  universeLoop,
 } from './lib';
-import { Moon } from './types';
+import type { Moon } from './types';
 
 it('gravity', () => {
   const [first] = one;
