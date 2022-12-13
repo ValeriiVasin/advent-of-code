@@ -1,11 +1,41 @@
 import { getLines } from './get-lines';
 
-test('get lines: trims content and trims each line', () => {
-  const input = `
-    one
-    two
-    three
-  `;
+const content = `
+  hello
+  world
+`;
 
-  expect(getLines(input)).toEqual(['one', 'two', 'three']);
+describe('get lines', () => {
+  test('trimming disabled', () => {
+    expect(getLines(content, { trim: false })).toEqual([
+      '',
+      '  hello',
+      '  world',
+      '',
+    ]);
+  });
+
+  test('trim content, but not lines', () => {
+    expect(
+      getLines(content, { trim: { content: true, lines: false } }),
+    ).toEqual(['  hello', '  world']);
+  });
+
+  test('trim lines, but not content', () => {
+    expect(
+      getLines(content, { trim: { content: false, lines: true } }),
+    ).toEqual(['', 'hello', 'world', '']);
+  });
+
+  test('trim lines and content', () => {
+    expect(getLines(content, { trim: true })).toEqual(['hello', 'world']);
+  });
+
+  test('trims content and lines by default', () => {
+    expect(getLines(content)).toEqual(['hello', 'world']);
+  });
+
+  test('empty content', () => {
+    expect(getLines('')).toEqual([]);
+  });
 });
