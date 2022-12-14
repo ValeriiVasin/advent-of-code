@@ -5,9 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "lint:prettier": "prettier --check '**/*.{js,ts}'",
     "check-types": "tsc --noEmit",
-    "lint": "npm run check-types && npm run lint:prettier"
+    "lint": "prettier --check '**/*.{js,ts}'"
   },
   "keywords": [
     "advent"
