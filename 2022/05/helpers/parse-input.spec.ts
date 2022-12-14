@@ -29,3 +29,18 @@ test('parses crates', () => {
     }),
   );
 });
+
+test('parses creates: one more variant', () => {
+  const input = `
+    [D]
+[N] [C]
+[Z] [M] [P]
+ 1   2   3
+  `;
+
+  expect(parseInput(input)).toEqual(
+    expect.objectContaining({
+      stacks: [['Z', 'N'], ['M', 'C', 'D'], ['P']],
+    }),
+  );
+});

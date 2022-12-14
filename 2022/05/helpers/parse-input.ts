@@ -39,22 +39,23 @@ function parseStacks(lines: Array<string>): Array<Stack> {
       continue;
     }
 
-    for (let i = 1; i < line.length; i += 4) {
-      const char = line[i];
-
-      if (!crateRegexp.test(char)) {
+    for (const [index, crate] of splitBy(line, 4).entries()) {
+      const char = crate[1];
+      if (char === ' ') {
         continue;
       }
 
-      const index = Math.floor(i / 4);
-      if (!result[index]) {
-        result[index] = [char];
-        continue;
-      }
-
-      result[index].unshift(char);
+      result[index] = result[index] ? [char, ...result[index]] : [char];
     }
   }
 
+  return result;
+}
+
+function splitBy(str: string, by: number): Array<string> {
+  const result: Array<string> = [];
+  for (let i = 0; i < str.length; i += by) {
+    result.push(str.slice(i, i + by));
+  }
   return result;
 }
