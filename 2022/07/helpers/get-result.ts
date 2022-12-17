@@ -41,9 +41,9 @@ function getSecondPartResult(stats: Map<string, number>): number {
   const requiredSpace = 30_000_000;
   const usedSpace = stats.get('/')!;
   const freeSpace = totalSpace - usedSpace;
-  const orderedSizes = [...stats.values()].sort((a, b) => a - b);
+  const orderedSizesAsc = [...stats.values()].sort((a, b) => a - b);
 
-  for (const size of orderedSizes) {
+  for (const size of orderedSizesAsc) {
     if (freeSpace + size >= requiredSpace) {
       return size;
     }
