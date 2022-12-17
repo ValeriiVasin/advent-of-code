@@ -17,3 +17,8 @@ export interface Command {
   args: Array<string>;
   output: Array<string>;
 }
+
+export const enum Part {
+  One,
+  Two,
+}
