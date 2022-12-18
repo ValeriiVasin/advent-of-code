@@ -2,7 +2,7 @@ import type { Grid, MaxHeight } from '../types';
 import { getMax } from './get-max';
 import { mirrorGridIndex } from './mirror-grid-index';
 
-export function maxHeightMap(heights: Grid<number>): Grid<MaxHeight> {
+export function getMaxHeightsGrid(heights: Grid<number>): Grid<MaxHeight> {
   const result = initialize(heights);
   const iLength = heights.length;
   const jLength = heights[0]?.length ?? 0;

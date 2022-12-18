@@ -1,7 +1,7 @@
 import { getMax } from './get-max';
-import { maxHeightMap } from './max-height-map';
+import { getMaxHeightsGrid } from './get-max-heights-grid';
 
-const maxHeightsGrid = maxHeightMap([
+const maxHeightsGrid = getMaxHeightsGrid([
   [1, 2, 3],
   [4, 5, 6],
   [7, 8, 9],

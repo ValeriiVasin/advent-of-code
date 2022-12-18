@@ -1,4 +1,4 @@
-import { maxHeightMap } from './max-height-map';
+import { getMaxHeightsGrid } from './get-max-heights-grid';
 
 test('max height map', () => {
   const heights = [
@@ -7,7 +7,7 @@ test('max height map', () => {
     [7, 8, 9],
   ];
 
-  expect(maxHeightMap(heights)).toEqual([
+  expect(getMaxHeightsGrid(heights)).toEqual([
     [
       { top: 1, right: 3, bottom: 7, left: 1 },
       { top: 2, right: 3, bottom: 8, left: 2 },
